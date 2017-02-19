@@ -245,7 +245,8 @@ class Pogom(Flask):
         d['oNeLat'] = neLat
         d['oNeLng'] = neLng
 
-        if request.args.get('pokemon', 'true') == 'true' and not args.no_pokemon:
+        if (request.args.get('pokemon', 'true') == 'true' and
+                not args.no_pokemon):
             if request.args.get('ids'):
                 ids = [int(x) for x in request.args.get('ids').split(',')]
                 d['pokemons'] = Pokemon.get_active_by_id(ids, swLat, swLng,
@@ -280,7 +281,8 @@ class Pogom(Flask):
                                              neLat, neLng))
                 d['reids'] = reids
 
-        if request.args.get('pokestops', 'true') == 'true' and not args.no_pokestops:
+        if (request.args.get('pokestops', 'true') == 'true' and
+                not args.no_pokestops):
             if lastpokestops != 'true':
                 d['pokestops'] = Pokestop.get_stops(swLat, swLng, neLat, neLng,
                                                     lured=luredonly)
