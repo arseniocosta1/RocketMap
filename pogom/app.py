@@ -151,6 +151,10 @@ class Pogom(Flask):
         scan_display = "none" if (args.only_server or args.fixed_location or
                                   args.spawnpoint_scanning) else "inline"
 
+        show_gyms = not args.no_gyms
+        show_pokemons = not args.no_pokemon
+        show_pokestops = not args.no_pokestops
+
         map_lat = self.current_location[0]
         map_lng = self.current_location[1]
         if request.args:
@@ -164,7 +168,10 @@ class Pogom(Flask):
                                lang=config['LOCALE'],
                                is_fixed=fixed_display,
                                search_control=search_display,
-                               show_scan=scan_display
+                               show_scan=scan_display,
+                               show_gyms=show_gyms,
+                               show_pokemons=show_pokemons,
+                               show_pokestops=show_pokestops
                                )
 
     def raw_data(self):
@@ -238,7 +245,7 @@ class Pogom(Flask):
         d['oNeLat'] = neLat
         d['oNeLng'] = neLng
 
-        if request.args.get('pokemon', 'true') == 'true':
+        if request.args.get('pokemon', 'true') == 'true' and not args.no_pokemon:
             if request.args.get('ids'):
                 ids = [int(x) for x in request.args.get('ids').split(',')]
                 d['pokemons'] = Pokemon.get_active_by_id(ids, swLat, swLng,
@@ -273,7 +280,7 @@ class Pogom(Flask):
                                              neLat, neLng))
                 d['reids'] = reids
 
-        if request.args.get('pokestops', 'true') == 'true':
+        if request.args.get('pokestops', 'true') == 'true' and not args.no_pokestops:
             if lastpokestops != 'true':
                 d['pokestops'] = Pokestop.get_stops(swLat, swLng, neLat, neLng,
                                                     lured=luredonly)
@@ -287,7 +294,7 @@ class Pogom(Flask):
                                            oNeLat=oNeLat, oNeLng=oNeLng,
                                            lured=luredonly))
 
-        if request.args.get('gyms', 'true') == 'true':
+        if request.args.get('gyms', 'true') == 'true' and not args.no_gyms:
             if lastgyms != 'true':
                 d['gyms'] = Gym.get_gyms(swLat, swLng, neLat, neLng)
             else:

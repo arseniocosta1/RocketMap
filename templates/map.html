@@ -46,6 +46,7 @@
         <div id="nav-accordion">
           <h3>Marker Settings</h3>
           <div>
+              {% if show_pokemons %}
             <div class="form-control switch-container">
               <h3>Pokémon</h3>
               <div class="onoffswitch">
@@ -56,6 +57,8 @@
                 </label>
               </div>
             </div>
+              {% endif %}
+              {% if show_gyms %}
             <div class="form-control switch-container">
               <h3>Gyms</h3>
               <div class="onoffswitch">
@@ -66,6 +69,7 @@
                 </label>
               </div>
             </div>
+
             <div class="form-control switch-container" id="gym-sidebar-wrapper" style="display:none">
               <h3>Use Gym Sidebar</h3>
               <div class="onoffswitch">
@@ -140,6 +144,8 @@
                 </select>
               </div>
             </div>
+              {% endif %}
+              {% if show_pokestops %}
             <div class="form-control switch-container">
               <h3>Pokéstops</h3>
               <div class="onoffswitch">
@@ -156,6 +162,7 @@
                 <option value="1">Only Lured</option>
               </select>
             </div>
+              {% endif %}
             <div class="form-control switch-container">
               <h3>Scanned Locations</h3>
               <div class="onoffswitch">
@@ -186,6 +193,7 @@
                 </label>
               </div>
             </div>
+              {% if show_pokemons %}
             <div class="form-control">
               <label for="exclude-pokemon">
               <h3>Hide Pokémon</h3>
@@ -194,6 +202,7 @@
               </div>
               </label>
             </div>
+              {% endif %}
           </div>
 
           <h3>Location &amp; Search Settings</h3>
@@ -266,6 +275,7 @@
             </div>
           </div>
 
+            {% if show_pokemons %}
           <h3>Notification Settings</h3>
           <div>
             <div class="form-control">
@@ -301,7 +311,7 @@
               </div>
             </div>
           </div>
-
+            {% endif %}
           <h3>Style Settings</h3>
           <div>
             <div class="form-control switch-container">
@@ -321,12 +331,15 @@
               <h3>Search Icon Marker</h3>
               <select name="iconmarker-style" id="iconmarker-style"></select>
             </div>
+
             <div class="form-control switch-container">
+                {% if show_gyms %}
               <h3>Gym Marker Style</h3>
               <select name="gym-marker-style" id="gym-marker-style">
                 <option value='ingame'>In-Game</option>
                 <option value='shield'>Shield</option>
               </select>
+                {% endif %}
               <h3>Location Icon Marker</h3>
               <select name="locationmarker-style" id="locationmarker-style"></select>
             </div>
