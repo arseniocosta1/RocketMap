@@ -154,6 +154,7 @@ class Pogom(Flask):
         show_gyms = not args.no_gyms
         show_pokemons = not args.no_pokemon
         show_pokestops = not args.no_pokestops
+        show_gym_info = args.gym_info
 
         map_lat = self.current_location[0]
         map_lng = self.current_location[1]
@@ -171,7 +172,8 @@ class Pogom(Flask):
                                show_scan=scan_display,
                                show_gyms=show_gyms,
                                show_pokemons=show_pokemons,
-                               show_pokestops=show_pokestops
+                               show_pokestops=show_pokestops,
+                               show_gym_info=show_gym_info
                                )
 
     def raw_data(self):
