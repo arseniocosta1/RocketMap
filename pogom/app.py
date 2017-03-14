@@ -173,7 +173,8 @@ class Pogom(Flask):
                                show_gyms=show_gyms,
                                show_pokemons=show_pokemons,
                                show_pokestops=show_pokestops,
-                               show_gym_info=show_gym_info
+                               show_gym_info=show_gym_info,
+                               encounter=args.encounter
                                )
 
     def raw_data(self):
