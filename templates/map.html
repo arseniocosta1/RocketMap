@@ -46,7 +46,7 @@
         <div id="nav-accordion">
           <h3>Marker Settings</h3>
           <div>
-              {% if show_pokemons %}
+              {% if show.pokemons %}
             <div class="form-control switch-container">
               <h3>Pokémon</h3>
               <div class="onoffswitch">
@@ -58,7 +58,7 @@
               </div>
             </div>
               {% endif %}
-              {% if show_gyms %}
+              {% if show.gyms %}
             <div class="form-control switch-container">
               <h3>Gyms</h3>
               <div class="onoffswitch">
@@ -70,7 +70,7 @@
               </div>
             </div>
 
-              {% if show_gym_info %}
+              {% if show.gym_info %}
             <div class="form-control switch-container" id="gym-sidebar-wrapper" style="display:none">
               <h3>Use Gym Sidebar</h3>
               <div class="onoffswitch">
@@ -147,7 +147,7 @@
               </div>
             </div>
               {% endif %}
-              {% if show_pokestops %}
+              {% if show.pokestops %}
             <div class="form-control switch-container">
               <h3>Pokéstops</h3>
               <div class="onoffswitch">
@@ -195,7 +195,7 @@
                 </label>
               </div>
             </div>
-              {% if show_pokemons %}
+              {% if show.pokemons %}
             <div class="form-control">
               <label for="exclude-pokemon">
               <h3>Hide Pokémon</h3>
@@ -208,14 +208,16 @@
           </div>
 
           <h3>Location &amp; Search Settings</h3>
+
           <div>
-            <div class="form-control switch-container" style="display:{{is_fixed}}" >
+              {% if show.fixed_display %}
+            <div class="form-control switch-container">
               <label for="next-location">
               <h3>Change search location</h3>
               <input id="next-location" type="text" name="next-location" placeholder="Change search location">
               </label>
             </div>
-            <div class="form-control switch-container" style="display:{{is_fixed}}" >
+            <div class="form-control switch-container">
               <h3>Lock search marker</h3>
               <div class="onoffswitch">
                 <input id="lock-marker-switch" type="checkbox" name="lock-marker-switch" class="onoffswitch-checkbox" checked/>
@@ -225,7 +227,7 @@
                 </label>
               </div>
             </div>
-            <div class="form-control switch-container" style="display:{{is_fixed}}" >
+            <div class="form-control switch-container">
               <h3>Search follows me</h3>
               <div class="onoffswitch">
                 <input id="geoloc-switch" type="checkbox" name="geoloc-switch" class="onoffswitch-checkbox" checked/>
@@ -235,6 +237,7 @@
                 </label>
               </div>
             </div>
+              {% endif %}
             <div class="form-control switch-container" >
               <h3>Start map at me</h3>
               <div class="onoffswitch">
@@ -245,7 +248,7 @@
                 </label>
               </div>
             </div>
-            <div class="form-control switch-container" style="display:{{search_control}}">
+            <div class="form-control switch-container" style="display:{{show.search_control}}">
               <h3>Search</h3>
               <div class="onoffswitch">
                 <input id="search-switch" type="checkbox" name="search-switch" class="onoffswitch-checkbox" checked/>
@@ -265,7 +268,8 @@
                 </label>
               </div>
             </div>
-            <div class="form-control switch-container" style="display:{{show_scan}}">
+              {% if show.scan_display %}
+            <div class="form-control switch-container">
               <h3>Scan here button</h3>
               <div class="onoffswitch">
                 <input id="scan-here-switch" type="checkbox" name="scan-here-switch" class="onoffswitch-checkbox" checked/>
@@ -275,9 +279,11 @@
                 </label>
               </div>
             </div>
+              {% endif %}
           </div>
 
-            {% if show_pokemons %}
+
+            {% if show.pokemons %}
           <h3>Notification Settings</h3>
           <div>
             <div class="form-control">
@@ -297,7 +303,7 @@
               </label>
             </div>
 
-              {% if encounter %}
+              {% if show.encounter %}
             <div class="form-control">
               <label for="notify-perfection">
                 <h3>Notify of Perfection</h3>
@@ -338,7 +344,7 @@
             </div>
 
             <div class="form-control switch-container">
-                {% if show_gyms %}
+                {% if show.gyms %}
               <h3>Gym Marker Style</h3>
               <select name="gym-marker-style" id="gym-marker-style">
                 <option value='ingame'>In-Game</option>
