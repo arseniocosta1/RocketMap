@@ -248,7 +248,8 @@
                 </label>
               </div>
             </div>
-            <div class="form-control switch-container" style="display:{{show.search_control}}">
+              {% if show.search_control %}
+            <div class="form-control switch-container">
               <h3>Search</h3>
               <div class="onoffswitch">
                 <input id="search-switch" type="checkbox" name="search-switch" class="onoffswitch-checkbox" checked/>
@@ -258,6 +259,7 @@
                 </label>
               </div>
             </div>
+              {% endif %}
             <div class="form-control switch-container">
               <h3>Follow me</h3>
               <div class="onoffswitch">
