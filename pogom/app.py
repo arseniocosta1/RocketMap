@@ -150,7 +150,7 @@ class Pogom(Flask):
                                   args.on_demand_timeout <= 0) else False
 
         scan_display = False if (args.only_server or args.fixed_location or
-                          args.spawnpoint_scanning) else True
+                                 args.spawnpoint_scanning) else True
 
         visibility_flags = {
             'gyms': not args.no_gyms,
