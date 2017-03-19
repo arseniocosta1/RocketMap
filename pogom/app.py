@@ -146,10 +146,11 @@ class Pogom(Flask):
         if args.on_demand_timeout > 0:
             self.search_control.clear()
 
-        search_display = "inline" if (args.search_control and
-                                      args.on_demand_timeout <= 0) else "none"
-        scan_display = (args.only_server or args.fixed_location or
-                        args.spawnpoint_scanning)
+        search_display = True if (args.search_control and
+                                  args.on_demand_timeout <= 0) else False
+
+        scan_display = False if (args.only_server or args.fixed_location or
+                          args.spawnpoint_scanning) else True
 
         visibility_flags = {
             'gyms': not args.no_gyms,
