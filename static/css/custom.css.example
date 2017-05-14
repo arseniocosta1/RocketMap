@@ -1,0 +1,3 @@
+/* onoff switch layout */
+.onoffswitch-label, .onoffswitch-label:before {border-color:#256db6 !important;}
+#nav .onoffswitch-checkbox:checked+.onoffswitch-label {border-color:#256db6; background-color:#ffde4e;}
