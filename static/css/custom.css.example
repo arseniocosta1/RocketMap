@@ -1,3 +1,5 @@
-/* onoff switch layout */
+/* onoff switch layout example
 .onoffswitch-label, .onoffswitch-label:before {border-color:#256db6 !important;}
 #nav .onoffswitch-checkbox:checked+.onoffswitch-label {border-color:#256db6; background-color:#ffde4e;}
+#nav h3 {font-size:12px;}
+*/
