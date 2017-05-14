@@ -1,5 +1,11 @@
-/* onoff switch layout example
+/* menu font size example */
+#nav h3 {font-size:12px;}
+
+/* menu width,padding example */
+#nav.visible {padding:10px;}
+#nav {width:250px;}
+
+/* onoff switch layout example */
 .onoffswitch-label, .onoffswitch-label:before {border-color:#256db6 !important;}
 #nav .onoffswitch-checkbox:checked+.onoffswitch-label {border-color:#256db6; background-color:#ffde4e;}
-#nav h3 {font-size:12px;}
-*/
+.select2-container {font-size: 12px;}
