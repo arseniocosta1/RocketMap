@@ -34,8 +34,10 @@
     <script src="{{ url_for('static', filename='js/vendor/modernizr.custom.js').lstrip('/') }}"></script>
     <!-- Toastr -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+      {% if show.custom_css %}
     <!-- Custom CSS code-->
     <link rel="stylesheet" type="text/css" href="static/css/custom.css">
+      {% endif %}
   </head>
   <body id="top">
     <div class="wrapper">
@@ -361,7 +363,7 @@
           </div>
         </div>
       <div style="margin-top:10px;">
-        <center><button class="settings" onclick="confirm('Are You sure You want to reset settings to default values?') ? (localStorage.clear(), window.location.reload()) : false" style="padding:0px 10px 0px 10px;"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp; Reset</button></center>
+        <center><button class="settings" onclick="confirm('Are you sure you want to reset settings to default values?') ? (localStorage.clear(), window.location.reload()) : false" style="padding:0px 10px 0px 10px;"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp; Reset Settings</button></center>
       </div>
       </nav>
       <nav id="stats">
