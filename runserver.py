@@ -156,12 +156,13 @@ def main():
         logging.getLogger('werkzeug').setLevel(logging.DEBUG)
 
     # Check if custom.css is used otherwise fall back to default.
-    if os.path.exists(os.path.join(root_path, 'static/css/custom.css')):
-        args.custom_css = True
-        log.info('File \"custom.css\" found, applying user-defined settings.')
+    if os.path.exists(
+        os.path.join(os.path.dirname(__file__),
+                     'static/css/custom.css')):
+        log.info('custom.css found, applying user-defined settings.')
     else:
-        args.custom_css = False
-        log.info('No file \"custom.css\" found, using default settings.')
+        log.info('No custom.css found, using default settings.')
+        pass
 
     # Web access logs.
     if args.access_logs:
