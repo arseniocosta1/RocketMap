@@ -2,7 +2,7 @@
 <html lang="{{lang}}">
   <head>
     <meta charset="utf-8">
-    <title>Rocket Map</title>
+    <title>RocketMap</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -34,7 +34,7 @@
     <script src="{{ url_for('static', filename='js/vendor/modernizr.custom.js').lstrip('/') }}"></script>
     <!-- Toastr -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <!-- custom css code-->
+    <!-- Custom CSS code-->
     <link rel="stylesheet" type="text/css" href="static/css/custom.css">
   </head>
   <body id="top">
@@ -42,13 +42,13 @@
       <!-- Header -->
       <header id="header">
         <a href="#nav"><span class="label">Options</span></a>
-        <a href="#"><img src="static/images/top-logo.png"></a>
+        <h1><a href="#">RocketMap &nbsp;<i class="fa fa-rocket" aria-hidden="true"></i></a></h1>
         <a href="#stats" id="statsToggle" class="statsNav" style="float: right;"><span class="label">Stats</span></a>
       </header>
       <!-- NAV -->
       <nav id="nav">
         <div id="nav-accordion">
-          <h3>Marker Settings</h3>
+          <h3>Marker Settings &emsp;<i class="fa fa-map-marker" aria-hidden="true"></i></h3>
           <div>
               {% if show.pokemons %}
             <div class="form-control switch-container">
@@ -210,7 +210,7 @@
               {% endif %}
           </div>
 
-          <h3>Location &amp; Search Settings</h3>
+          <h3>Location &amp; Search Settings &emsp;<i class="fa fa-location-arrow" aria-hidden="true"></i></h3>
 
           <div>
               {% if show.fixed_display %}
@@ -287,9 +287,8 @@
               {% endif %}
           </div>
 
-
             {% if show.pokemons %}
-          <h3>Notification Settings</h3>
+          <h3>Notification Settings &emsp;<i class="fa fa-bullhorn" aria-hidden="true"></i></h3>
           <div>
             <div class="form-control">
               <label for="notify-pokemon">
@@ -328,7 +327,7 @@
             </div>
           </div>
             {% endif %}
-          <h3>Style Settings</h3>
+          <h3>Style Settings &emsp;<i class="fa fa-map-o" aria-hidden="true"></i></h3>
           <div>
             <div class="form-control switch-container">
               <h3>Map Style</h3>
@@ -361,8 +360,9 @@
             </div>
           </div>
         </div>
-          
-            <center><button class="settings" onclick="confirm('Are you sure you want to reset settings to default values?') ? (localStorage.clear(), window.location.reload()) : false">Reset</button></center>
+      <div style="margin-top:10px;">
+        <center><button class="settings" onclick="confirm('Are You sure You want to reset settings to default values?') ? (localStorage.clear(), window.location.reload()) : false" style="padding:0px 10px 0px 10px;"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp; Reset</button></center>
+      </div>
       </nav>
       <nav id="stats">
         <div class="switch-container">

@@ -1,18 +1,24 @@
-/* top-logo */
-img {vertical-align:middle;}
+/* Gym, Pokémon, Pokéstop information dialog box font style example: */
 
-/* menu font size example */
-#nav h3 {font-size:12px;}
+.gm-style .gm-style-iw {font-weight: 400; font-size: 11px;}
 
-/* menu width,padding example */
-#nav.visible {padding:10px;}
-#nav {width:250px;}
+/* Options menu font style example: */
 
-/* onoff switch layout example */
-.onoffswitch-label, .onoffswitch-label:before {border-color:#256db6 !important;}
-#nav .onoffswitch-checkbox:checked+.onoffswitch-label {border-color:#256db6; background-color:#ffde4e;}
-.select2-container {font-size: 12px;}
+#nav h3 {font-size: 11px; font-weight: 500;}
+#nav .ui-accordion-header {font-weight: 900;}
 
-/* reset button */
-button {margin-top:10px;}
+/* Options menu padding, width example: */
 
+#nav.visible {padding: 10px;}
+#nav {width: 250px;}
+
+/* Options menu on/off switch style example: */
+
+.onoffswitch-label, .onoffswitch-label:before {border-color: #256db6 !important;}
+#nav .onoffswitch-checkbox:checked+.onoffswitch-label {border-color: #256db6; background-color: #ffde4e;}
+.select2-container {font-size: 11px;}
+
+/* Options menu Reset button style example: */
+
+button {border: 1px solid #256db6; background-color: #fff; color: #256db6 !important; font-size: 11px;}
+button:hover {background-color: #ffde4e;}
