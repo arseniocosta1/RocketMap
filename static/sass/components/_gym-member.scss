@@ -1,28 +1,20 @@
 .gym-member {
-  
+
   display: inline-block;
   margin-left: 1px;
 
   .cp {
-    display: block;
-    border-radius: 5px;
-    text-align: center;
-    vertical-align: middle;
-    font-size: .85em;
+    color: rgb(93,109,126);
+    font-size: 8px;
+    font-weight: 500;
 
-    &.team-1 {
-      background-color: #4A8ACA;
-      color: #fff;
+    &.heart {
+      height: 8px;
     }
 
-    &.team-2 {
-      background-color: #F0443A;
-      color: #fff;
-    }
-
-    &.team-3 {
-      background-color: #FED928;
-      color: #000;
+    &.value {
+      font-size: 10px;
+      font-weight: 900;
     }
   }
 }
