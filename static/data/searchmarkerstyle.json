@@ -1,42 +1,50 @@
 {
-  "none": {
-    "name": "Hidden",
-    "icon": "static/marker_icons/transparent.png"
+  "backpack": {
+    "name": "Backpack",
+    "icon": "static/marker_icons/backpack.png"
+  },
+  "compass": {
+    "name": "Compass",
+    "icon": "static/marker_icons/compass.png"
   },
   "google": {
     "name": "Default Google Marker",
     "icon": null
   },
-  "red": {
-    "name": "Red",
-    "icon": "static/marker_icons/red.gif"
+  "female": {
+    "name": "Female",
+    "icon": "static/marker_icons/female.png"
   },
-  "red_animated": {
-    "name": "Red (Animated)",
-    "icon": "static/marker_icons/red_animated.gif"
+  "greatball": {
+    "name": "Great Ball",
+    "icon": "static/marker_icons/greatball.png"
   },
-  "blue": {
-    "name": "Blue",
-    "icon": "static/marker_icons/blue.gif"
+  "none": {
+    "name": "Hidden",
+    "icon": "static/marker_icons/transparent.png"
   },
-  "blue_animated": {
-    "name": "Blue (Animated)",
-    "icon": "static/marker_icons/blue_animated.gif"
+  "male": {
+    "name": "Male",
+    "icon": "static/marker_icons/male.png"
   },
-  "yellow": {
-    "name": "Yellow",
-    "icon": "static/marker_icons/yellow.gif"
+  "masterball": {
+    "name": "Master Ball",
+    "icon": "static/marker_icons/masterball.png"
   },
-  "yellow_animated": {
-    "name": "Yellow (Animated)",
-    "icon": "static/marker_icons/yellow_animated.gif"
+  "mobile": {
+    "name": "Mobile",
+    "icon": "static/marker_icons/mobile.png"
+  },
+  "pokeball": {
+    "name": "Pokeball",
+    "icon": "static/marker_icons/pokeball.png"
   },
   "pokesition": {
     "name": "Pokesition",
     "icon": "static/marker_icons/pokesition.png"
   },
-  "pokeball": {
-    "name": "Pokeball",
-    "icon": "static/marker_icons/pokeball.gif"
+  "ultraball": {
+    "name": "Ultra Ball",
+    "icon": "static/marker_icons/ultraball.png"
   }
 }
