@@ -477,7 +477,7 @@ function pokemonLabel(item) {
             <div class='pokemon container content-left'>
               <div>
                 <img class='pokemon sprite' src='static/icons/${id}.png'>
-                <span class='pokemon'>Level: </span><span class='pokemon no-encounter'>${pokemonLevel}</span>
+                <span class='pokemon'>Level: </span><span class='pokemon'>${pokemonLevel}</span>
                 <span class='pokemon links exclude'><a href='javascript:excludePokemon(${id})'>Exclude</a></span>
                 <span class='pokemon links notify'><a href='javascript:notifyAboutPokemon(${id})'>Notify</a></span>
                 <span class='pokemon links remove'><a href='javascript:notifyAboutPokemon(${id})'>Remove</a></span>
@@ -585,10 +585,7 @@ function gymLabel(teamName, teamId, gymPoints, latitude, longitude, lastScanned 
                     <div class='gym name'>
                         ${name}
                     </div>
-                    <div class='gym teamname' style='color:rgba(${gymColor[teamId]})'>
-                        ${teamName}
-                    </div>
-                    <img class='gym sprite' src='static/forts/gym/${teamName}Large.png'>
+                    <img class='gym sprite' src='static/forts/gym/${teamName}.png'>
                 </center>
                 <div class='gym container'>
                     <div>
@@ -601,9 +598,6 @@ function gymLabel(teamName, teamId, gymPoints, latitude, longitude, lastScanned 
                         Last Modified: ${lastModifiedStr}
                     </div>
                 </div>
-                    <div>
-                        ${memberStr}
-                    </div>
             </div>`
     } else {
         str = `
@@ -612,13 +606,10 @@ function gymLabel(teamName, teamId, gymPoints, latitude, longitude, lastScanned 
                   <div class='gym name'>
                       ${name}
                   </div>
-                  <div class='gym teamname' style='color:rgba(${gymColor[teamId]})'>
-                      Team ${teamName}
-                  </div>
                   <div class='gym slots'>
                       <span class='gym stats slots free'>${slotsString}</span>
                   </div>
-                  <img class='gym sprite' src='static/forts/gym/${teamName}Large.png'>
+                  <img class='gym sprite' src='static/forts/gym/${teamName}.png'>
               </center>
               <div class='gym container'>
                   <div>
@@ -679,21 +670,6 @@ function gymLabel(teamName, teamId, gymPoints, latitude, longitude, lastScanned 
         str += '<br>'
     }
 
-    str += `
-                <br>
-                <div>
-                    Location: ${latitude.toFixed(6)}, ${longitude.toFixed(7)}
-                </div>
-                <div>
-                    Last Scanned: ${lastScannedStr}
-                </div>
-                <div>
-                    Last Modified: ${lastModifiedStr}
-                </div>
-                ${directionsStr}
-            </center>
-        </div>`
-
     return str
 }
 
@@ -709,7 +685,7 @@ function pokestopLabel(expireTime, latitude, longitude) {
                   <span class='label-countdown' disappears-at='${expireTime}'>00m00s</span> left
               </div>
               <div>
-                <img class='pokestop sprite' src='static/forts/pokestop/PokestopLuredLarge.png'>
+                <img class='pokestop sprite' src='static/forts/pokestop/PokestopLured.png'>
               </div>
               <div>
                 <span class='pokestop navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='Open in Google Maps'; class='pokestop lure'>${latitude.toFixed(6)}, ${longitude.toFixed(7)}</a></span>
@@ -723,7 +699,7 @@ function pokestopLabel(expireTime, latitude, longitude) {
                 Pokéstop
               </div>
               <div>
-                <img class='pokestop sprite' src='static/forts/pokestop/PokestopLarge.png'>
+                <img class='pokestop sprite' src='static/forts/pokestop/Pokestop.png'>
               </div>
               <div>
                 <span class='pokestop navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='Open in Google Maps'; class='pokestop nolure'>${latitude.toFixed(6)}, ${longitude.toFixed(7)}</a></span>
@@ -969,7 +945,7 @@ function setupGymMarker(item) {
             },
             map: map,
             icon: {
-                url: 'static/raids/level_' + item['raid']['level'] + '.png',
+                url: 'static/forts/raid' + '/' + gymTypes[item['team_id']] + '_' + getGymLevel(item) + '_' + item['raid']['level'] + '.png',
                 scaledSize: new google.maps.Size(48, 48)
             }
         })
@@ -981,7 +957,7 @@ function setupGymMarker(item) {
             },
             map: map,
             icon: {
-                url: 'static/forts/gym' + '/' + gymTypes[item['team_id']] + getGymLevel(item) + '.png',
+                url: 'static/forts/gym' + '/' + gymTypes[item['team_id']] + '_' + getGymLevel(item) + '.png',
                 scaledSize: new google.maps.Size(48, 48)
             }
         })
@@ -1039,12 +1015,12 @@ function updateGymMarker(item, marker) {
         marker.setZIndex(500)
     } else if (item['raid'] !== null && item['raid']['end'] > Date.now()) {
         marker.setIcon({
-            url: 'static/raids/level_' + item['raid']['level'] + '.png',
+            url: 'static/forts/raid' + '/' + gymTypes[item['team_id']] + '_' + getGymLevel(item) + '_' + item['raid']['level'] + '.png',
             scaledSize: new google.maps.Size(48, 48)
         })
     } else {
         marker.setIcon({
-            url: 'static/forts/gym' + '/' + gymTypes[item['team_id']] + getGymLevel(item) + '.png',
+            url: 'static/forts/gym' + '/' + gymTypes[item['team_id']] + '_' + getGymLevel(item) + '.png',
             scaledSize: new google.maps.Size(48, 48)
         })
         marker.setZIndex(1)
@@ -1941,21 +1917,15 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
         var slotsString = freeSlots ? (freeSlots === 1 ? '1 Free Slot' : `${freeSlots} Free Slots`) : 'No Free Slots'
         if (result.team_id === 0) {
             gymLevelStr = `
-                <div class='gym teamname team-${[result.team_id]}'>
-                    ${gymTypes[result.team_id]}
-                </div>
-                <img class='gym sprite sidebar' src='static/forts/gym/${gymTypes[result.team_id]}Large.png'>
+                <img class='gym sprite sidebar' src='static/forts/gym/${gymTypes[result.team_id]}.png'>
                 </div>
             `
         } else {
             gymLevelStr = `
-                <div class='gym teamname team-${[result.team_id]}'>
-                    Team ${gymTypes[result.team_id]}
-                </div>
                 <div class='gym slots'>
                     <span class='gym stats slots free'>${slotsString}</span>
                 </div>
-                <img class='gym sprite sidebar' src='static/forts/gym/${gymTypes[result.team_id]}Large.png'>
+                <img class='gym sprite sidebar' src='static/forts/gym/${gymTypes[result.team_id]}.png'>
                 </div>
             `
         }
