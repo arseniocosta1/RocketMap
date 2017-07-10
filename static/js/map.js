@@ -543,96 +543,34 @@ function pokemonLabel(item) {
     return contentstring
 }
 
-function gymLabel(teamName, teamId, gymPoints, latitude, longitude, lastScanned = null, lastModified = null, name = null, members = [], gymId, raid) {
-    var memberStr = ''
-    for (var i = 0; i < members.length; i++) {
+function gymLabel(gym) {
+    console.log(gym)
+    let memberStr = ''
+    gym.pokemon.forEach((member) => {
         memberStr += `
-          <span class="gym-member" title="${members[i].pokemon_name} | ${members[i].trainer_name} (Lvl ${members[i].trainer_level})">
+          <span class="gym-member" title="${member.pokemon_name} | ${member.trainer_name} (Lvl ${member.trainer_level})">
             <center>
               <div>
                 <div>
-                  <i class="pokemon-sprite n${members[i].pokemon_id}"></i>
+                  <i class="pokemon-sprite n${member.pokemon_id}"></i>
                 </div>
                 <div>
-                  <span class="gym pokemon">${members[i].pokemon_name}</span>
+                  <span class="gym pokemon">${member.pokemon_name}</span>
                 </div>
                 <div class="cp">
-                  <img class="cp heart" src='static/forts/gym/Heart.png'> <span class="cp value">${members[i].pokemon_cp}</span>
+                  <img class="cp heart" src='static/forts/gym/Heart.png'> <span class="cp value">${member.pokemon_cp}</span>
                 </div>
               </div>
             </center>
           </span>`
-    }
-
-    var lastScannedStr = getDateStr(lastScanned)
-    var lastModifiedStr = getDateStr(lastModified)
-    var directionsStr = ''
-    if (!Store.get('useGymSidebar')) {
-        directionsStr = `<div>
-                <a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='View in Maps'>Get directions</a>
-            </div>`
-    }
-    var freeSlots = 6 - members.length
-    var slotsString = freeSlots ? (freeSlots === 1 ? '1 Free Slot' : `${freeSlots} Free Slots`) : 'No Free Slots'
-
-    var gymColor = ['85,85,85,1', '0,134,255,1', '255,26,26,1', '255,159,25,1']
-
-    var str
-    if (teamId === 0) {
-        str = `
-            <div>
-                <center>
-                    <div class='gym name'>
-                        ${name}
-                    </div>
-                    <img class='gym sprite' src='static/forts/gym/${teamName}.png'>
-                </center>
-                <div class='gym container'>
-                    <div>
-                      <span class='gym info navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='Open in Google Maps'>${latitude.toFixed(6)}, ${longitude.toFixed(7)}</a></span>
-                    </div>
-                    <div class='gym info last-scanned'>
-                        Last Scanned: ${lastScannedStr}
-                    </div>
-                    <div class='gym info last-modified'>
-                        Last Modified: ${lastModifiedStr}
-                    </div>
-                </div>
-            </div>`
-    } else {
-        str = `
-          <div>
-              <center>
-                  <div class='gym name'>
-                      ${name}
-                  </div>
-                  <div class='gym slots'>
-                      <span class='gym stats slots free'>${slotsString}</span>
-                  </div>
-                  <img class='gym sprite' src='static/forts/gym/${teamName}.png'>
-              </center>
-              <div class='gym container'>
-                  <div>
-                    <span class='gym info navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${latitude},${longitude});' title='Open in Google Maps'>${latitude.toFixed(6)}, ${longitude.toFixed(7)}</a></span>
-                  </div>
-                  <div class='gym info last-scanned'>
-                      Last Scanned: ${lastScannedStr}
-                  </div>
-                  <div class='gym info last-modified'>
-                      Last Modified: ${lastModifiedStr}
-                  </div>
-              </div>
-                  <div>
-                      ${memberStr}
-                  </div>
-          </div>`
-    }
-
+    })
+    const raid = gym.raid
+    let raidStr = ''
     if (raid !== null && raid['end'] > Date.now()) {
-        var raidStartStr = getTimeStr(raid['start'])
-        var raidEndsStr = getTimeStr(raid['end'])
-        var levelStr = '★'.repeat(raid['level'])
-        str += `
+        const raidStartStr = getTimeStr(raid['start'])
+        const raidEndsStr = getTimeStr(raid['end'])
+        const levelStr = '★'.repeat(raid['level'])
+        raidStr += `
                     <br>
                     <div>
                         Raid Level: ${levelStr}
@@ -641,15 +579,15 @@ function gymLabel(teamName, teamId, gymPoints, latitude, longitude, lastScanned 
                         <div style="margin-bottom: 10px">Time: <b>${raidStartStr}</b> - <b>${raidEndsStr}</b></div>
                     </div>`
         if (raid['pokemon_id'] !== null) {
-            var types = raid['pokemon_types']
-            var typesDisplay = ''
-            var pMove1 = (moves[raid['move_1']] !== undefined) ? i8ln(moves[raid['move_1']]['name']) : 'gen/unknown'
-            var pMove2 = (moves[raid['move_2']] !== undefined) ? i8ln(moves[raid['move_2']]['name']) : 'gen/unknown'
-
-            $.each(types, function (index, type) {
+            const types = raid['pokemon_types']
+            let typesDisplay =
+            types.forEach(type => {
                 typesDisplay += getTypeSpan(type)
             })
-            str += `
+            const pMove1 = (moves[raid['move_1']] !== undefined) ? i8ln(moves[raid['move_1']]['name']) : 'gen/unknown'
+            const pMove2 = (moves[raid['move_2']] !== undefined) ? i8ln(moves[raid['move_2']]['name']) : 'gen/unknown'
+
+            raidStr += `
                     <br>
                     <div>
                         <b>${raid['pokemon_name']}</b>
@@ -667,9 +605,51 @@ function gymLabel(teamName, teamId, gymPoints, latitude, longitude, lastScanned 
                         Moves: ${pMove1} / ${pMove2}
                     </div>`
         }
-        str += '<br>'
+        raidStr += '<br>'
     }
+    const lastScannedStr = getDateStr(gym.last_scanned)
+    const lastModifiedStr = getDateStr(gym.last_modified)
+    const slotsString = gym.slots_available ? (gym.slots_available === 1 ? '1 Free Slot' : `${gym.slots_available} Free Slots`) : 'No Free Slots'
+    const teamName = gymTypes[gym.team_id]
+    const gymColor = ['85,85,85,1', '0,134,255,1', '255,26,26,1', '255,159,25,1']
+    const nameStr = (gym.name ? `<div class='gym name'>${gym.name}</div>` : '')
 
+    let str = `
+            <div>
+                <center>
+                    ${nameStr}
+                    <div class='gym teamname' style='color:rgba(${gymColor[gym.teamId]})'>
+                        ${teamName}
+                    </div>`
+    if (gym.team_id !== 0) {
+        str += `
+                    <div class='gym slots'>
+                        <span class='gym stats slots free'>${slotsString}</span>
+                    </div>`
+    }
+    str += `
+                    <img class='gym sprite' src='static/forts/gym/${teamName}.png'>
+                    ${raidStr}
+                </center>
+                <div class='gym container'>
+                    <div>
+                      <span class='gym info navigate'>
+                        <a href='javascript:void(0);' onclick='javascript:openMapDirections(${gym.latitude},${gym.longitude});' title='Open in Google Maps'>
+                          ${gym.latitude.toFixed(6)}, ${gym.longitude.toFixed(7)}
+                        </a>
+                      </span>
+                    </div>
+                    <div class='gym info last-scanned'>
+                        Last Scanned: ${lastScannedStr}
+                    </div>
+                    <div class='gym info last-modified'>
+                        Last Modified: ${lastModifiedStr}
+                    </div>
+                </div>
+                    <div>
+                        ${memberStr}
+                    </div>
+            </div>`
     return str
 }
 
@@ -921,54 +901,23 @@ function customizePokemonMarker(marker, item, skipNotification) {
 }
 
 function setupGymMarker(item) {
-    var marker
-    if (item['raid'] !== null && item['raid']['end'] > Date.now() && item['raid']['pokemon_id'] !== null) {
-        marker = new google.maps.Marker({
-            position: {
-                lat: item['latitude'],
-                lng: item['longitude']
-            },
-            map: map,
-            icon: {
-                url: 'static/icons/' + item['raid']['pokemon_id'] + '.png',
-                scaledSize: new google.maps.Size(72, 72)
-            },
-            zIndex: 500
-        })
-    } else if (item['raid'] !== null && item['raid']['end'] > Date.now()) {
-        marker = new google.maps.Marker({
-            position: {
-                lat: item['latitude'],
-                lng: item['longitude']
-            },
-            map: map,
-            icon: {
-                url: 'static/forts/raid' + '/' + gymTypes[item['team_id']] + '_' + getGymLevel(item) + '_' + item['raid']['level'] + '.png',
-                scaledSize: new google.maps.Size(48, 48)
-            }
-        })
-    } else {
-        marker = new google.maps.Marker({
-            position: {
-                lat: item['latitude'],
-                lng: item['longitude']
-            },
-            map: map,
-            icon: {
-                url: 'static/forts/gym' + '/' + gymTypes[item['team_id']] + '_' + getGymLevel(item) + '.png',
-                scaledSize: new google.maps.Size(48, 48)
-            }
-        })
-    }
+    var marker = new google.maps.Marker({
+        position: {
+            lat: item['latitude'],
+            lng: item['longitude']
+        },
+        map: map
+    })
+    marker.infoWindow = new google.maps.InfoWindow({
+        content: '',
+        disableAutoPan: true
+    })
+    updateGymMarker(item, marker)
 
     if (!marker.rangeCircle && isRangeActive(map)) {
         marker.rangeCircle = addRangeCircle(marker, map, 'gym', item['team_id'])
     }
 
-    marker.infoWindow = new google.maps.InfoWindow({
-        content: gymLabel(gymTypes[item['team_id']], item['team_id'], item['gym_points'], item['latitude'], item['longitude'], item['last_scanned'], item['last_modified'], item['name'], item['pokemon'], item['gym_id'], item['raid']),
-        disableAutoPan: true
-    })
 
     if (Store.get('useGymSidebar')) {
         marker.addListener('click', function () {
@@ -1005,25 +954,25 @@ function setupGymMarker(item) {
 }
 
 function updateGymMarker(item, marker) {
-    if (item['raid'] !== null && item['raid']['end'] > Date.now() && item['raid']['pokemon_id'] !== null) {
+    if (item.raid !== null && item.raid.end > Date.now() && item.raid.pokemon_id !== null) {
         marker.setIcon({
-            url: 'static/icons/' + item['raid']['pokemon_id'] + '.png',
+            url: 'static/icons/' + item.raid.pokemon_id + '.png',
             scaledSize: new google.maps.Size(72, 72)
         })
         marker.setZIndex(500)
-    } else if (item['raid'] !== null && item['raid']['end'] > Date.now()) {
+    } else if (item.raid !== null && item.raid.end > Date.now()) {
         marker.setIcon({
-            url: 'static/forts/raid' + '/' + gymTypes[item['team_id']] + '_' + getGymLevel(item) + '_' + item['raid']['level'] + '.png',
+            url: 'static/forts/raid/' + gymTypes[item.team_id] + '_' + getGymLevel(item) + '_' + item['raid']['level'] + '.png',
             scaledSize: new google.maps.Size(48, 48)
         })
     } else {
         marker.setIcon({
-            url: 'static/forts/gym' + '/' + gymTypes[item['team_id']] + '_' + getGymLevel(item) + '.png',
+            url: 'static/forts/gym/' + gymTypes[item.team_id] + '_' + getGymLevel(item) + '.png',
             scaledSize: new google.maps.Size(48, 48)
         })
         marker.setZIndex(1)
     }
-    marker.infoWindow.setContent(gymLabel(gymTypes[item['team_id']], item['team_id'], item['gym_points'], item['latitude'], item['longitude'], item['last_scanned'], item['last_modified'], item['name'], item['pokemon'], item['gym_id'], item['raid']))
+    marker.infoWindow.setContent(gymLabel(item))
     return marker
 }
 
@@ -1908,32 +1857,25 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
     })
 
     data.done(function (result) {
-        var lastScannedDateStr = getDateStr(result.last_scanned)
-        var lastModifiedDateStr = getDateStr(result.last_modified)
-        var freeSlots = result.slots_available
-        var gymLevelStr = ''
-        var slotsString = freeSlots ? (freeSlots === 1 ? '1 Free Slot' : `${freeSlots} Free Slots`) : 'No Free Slots'
-        if (result.team_id === 0) {
-            gymLevelStr = `
-                <img class='gym sprite sidebar' src='static/forts/gym/${gymTypes[result.team_id]}.png'>
-                </div>
-            `
-        } else {
-            gymLevelStr = `
-                <div class='gym slots'>
-                    <span class='gym stats slots free'>${slotsString}</span>
-                </div>
-                <img class='gym sprite sidebar' src='static/forts/gym/${gymTypes[result.team_id]}.png'>
-                </div>
-            `
+        const lastScannedDateStr = getDateStr(result.last_scanned)
+        const lastModifiedDateStr = getDateStr(result.last_modified)
+        const slotsString = result.slots_available ? (result.slots_available === 1 ? '1 Free Slot' : `${result.slots_available} Free Slots`) : 'No Free Slots'
+        let gymLevelStr = ''
+        const gymName = result.name ? `<div class='gym name'>${result.name}</div>` : ''
+
+        if (result.team_id !== 0) {
+            gymLevelStr += `
+            <div class='gym slots'>
+                <span class='gym stats slots free'>${slotsString}</span>
+            </div>`
         }
-        var pokemonHtml = ''
+        gymLevelStr += `
+            <img class='gym sprite sidebar' src='static/forts/gym/${gymTypes[result.team_id]}.png'>
+            </div>`
         var headerHtml = `
         <center>
-            <div class='gym name'>
-                ${result.name}
-            </div>
-                ${gymLevelStr}
+            ${gymName}
+            ${gymLevelStr}
         </center>
             <div class='gym container'>
                 <div>
@@ -1990,8 +1932,9 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
             }
             headerHtml += '</center><br>'
         }
+        var pokemonHtml = ''
         if (result.pokemon.length) {
-            $.each(result.pokemon, function (i, pokemon) {
+            result.pokemon.forEach((pokemon) => {
                 var perfectPercent = getIv(pokemon.iv_attack, pokemon.iv_defense, pokemon.iv_stamina)
                 var moveEnergy = Math.round(100 / pokemon.move_2_energy)
 
