@@ -26,7 +26,7 @@
       content: '\f007';
       display: inline-block;
       font-family: FontAwesome;
-      margin: 5px 5px 0px 0px;
+      margin: 5px 0px 0px 0px;
       height: 16px;
       width: 16px;
       -webkit-font-smoothing: antialiased;
@@ -77,4 +77,22 @@
   display: block;
   height: 48px;
   width: 48px;
+  margin-bottom: 5px;
+}
+
+.cp {
+  color: rgb(93,109,126);
+  font-size: 8px;
+  font-weight: 500;
+
+  &.heart {
+    height: 8px;
+    width: 8px;
+  }
+}
+
+.gympoints {
+  height: 16px;
+  width: 16px;
+  vertical-align: middle;
 }

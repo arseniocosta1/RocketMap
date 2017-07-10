@@ -1,0 +1,44 @@
+.raid {
+  color: rgb(93,109,126);
+  font-size: 12px;
+
+  &.cp {
+    color: rgb(93,109,126);
+    font-weight: 900;
+
+    &.heart {
+      height: 16px;
+      width: 16px;
+      vertical-align: bottom;
+    }
+  }
+
+  &.encounter {
+    font-size: 11px;
+    font-weight: 900;
+  }
+
+  &.start {
+    color: rgb(93,109,126);
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  &.disappear {
+
+    &:before {
+      content: '\f017';
+      display: inline-block;
+      font-family: FontAwesome;
+      margin: 0px 0px 0px -2px;
+      height: 16px;
+      width: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+  }
+
+  &.pokemon.name {
+    font-size: 14px;
+    font-weight: 900;
+  }
+}
