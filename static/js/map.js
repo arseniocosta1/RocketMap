@@ -69,21 +69,21 @@ var unownForm = ['unset', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
 
 
 /*
-  text place holders:
-  <pkm> - pokemon name
-  <prc> - iv in percent without percent symbol
-  <atk> - attack as number
-  <def> - defense as number
-  <sta> - stamnia as number
-*/
+ text place holders:
+ <pkm> - pokemon name
+ <prc> - iv in percent without percent symbol
+ <atk> - attack as number
+ <def> - defense as number
+ <sta> - stamnia as number
+ */
 var notifyIvTitle = '<pkm> <prc>% (<atk>/<def>/<sta>)'
 var notifyNoIvTitle = '<pkm>'
 
 /*
-  text place holders:
-  <dist>  - disappear time
-  <udist> - time until disappear
-*/
+ text place holders:
+ <dist>  - disappear time
+ <udist> - time until disappear
+ */
 var notifyText = 'disappears at <dist> (<udist>)'
 
 //
@@ -401,7 +401,7 @@ function initSidebar() {
 }
 
 function getTypeSpan(type) {
-    return `<span style='padding: 2px 3px 0px 3px; margin-right: 2px; text-transform: uppercase; color: white; border-radius: 4px; font-size: 9px; background-color: ${type['color']}'>${type['type']}</span>`
+    return `<img class='pokemon elements' src='static/elements/${type['type']}.png'></span>`
 }
 
 function openMapDirections(lat, lng) { // eslint-disable-line no-unused-vars
@@ -421,7 +421,7 @@ function getDateStr(t) {
 function getTimeStr(t) {
     var dateStr = 'Unknown'
     if (t) {
-        dateStr = moment(t).format('HH:mm:ss')
+        dateStr = moment(t).format('HH:mm')
     }
     return dateStr
 }
@@ -462,7 +462,7 @@ function pokemonLabel(item) {
 
     contentstring += `
     <div class='pokemon name'>
-      ${name} <span class='pokemon name pokedex'><a href='http://pokemon.gameinfo.io/en/pokemon/${id}' target='_blank' title='View in Pokedex'>#${id}</a></span> ${formString} ${typesDisplay} <span class='pokemon gender rarity'>${genderType[gender - 1]} ${rarityDisplay}</span>
+      ${name} <span class='pokemon name pokedex'><a href='http://pokemon.gameinfo.io/en/pokemon/${id}' target='_blank' title='View in Pokedex'>#${id}</a></span> ${formString} <span class='pokemon gender rarity'>${genderType[gender - 1]} ${rarityDisplay}</span> ${typesDisplay}
     </div>`
 
     if (cp !== null && cpMultiplier !== null) {
@@ -543,114 +543,187 @@ function pokemonLabel(item) {
     return contentstring
 }
 
-function gymLabel(gym) {
-    console.log(gym)
-    let memberStr = ''
-    gym.pokemon.forEach((member) => {
-        memberStr += `
-          <span class="gym-member" title="${member.pokemon_name} | ${member.trainer_name} (Lvl ${member.trainer_level})">
-            <center>
-              <div>
-                <div>
-                  <i class="pokemon-sprite n${member.pokemon_id}"></i>
-                </div>
-                <div>
-                  <span class="gym pokemon">${member.pokemon_name}</span>
-                </div>
-                <div class="cp">
-                  <img class="cp heart" src='static/forts/gym/Heart.png'> <span class="cp value">${member.pokemon_cp}</span>
-                </div>
-              </div>
-            </center>
-          </span>`
-    })
+function gymLabel(gym, includeMembers = true) {
     const raid = gym.raid
     let raidStr = ''
-    if (raid !== null && raid['end'] > Date.now()) {
-        const raidStartStr = getTimeStr(raid['start'])
-        const raidEndsStr = getTimeStr(raid['end'])
-        const levelStr = '★'.repeat(raid['level'])
-        raidStr += `
-                    <br>
-                    <div>
-                        Raid Level: ${levelStr}
-                    </div>
-                    <div>
-                        <div style="margin-bottom: 10px">Time: <b>${raidStartStr}</b> - <b>${raidEndsStr}</b></div>
-                    </div>`
-        if (raid['pokemon_id'] !== null) {
+
+    if (raid !== null && raid.end > Date.now()) {
+        if (raid.pokemon_id !== null) {
             const types = raid['pokemon_types']
-            let typesDisplay =
+            let typesDisplay = ''
             types.forEach(type => {
                 typesDisplay += getTypeSpan(type)
-            })
+        })
             const pMove1 = (moves[raid['move_1']] !== undefined) ? i8ln(moves[raid['move_1']]['name']) : 'gen/unknown'
             const pMove2 = (moves[raid['move_2']] !== undefined) ? i8ln(moves[raid['move_2']]['name']) : 'gen/unknown'
 
             raidStr += `
-                    <br>
+                    <div class='raid'>
+                       <b>CP:</b> <span class='raid cp'>${raid['cp']}</span>                            
+                    </div>
                     <div>
+                         Moveset: <span class='raid encounter'>${pMove1}/${pMove2}</span>
+                    </div>`
+        }
+    }
+    const lastScannedStr = getDateStr(gym.last_scanned)
+    const lastModifiedStr = getDateStr(gym.last_modified)
+    const slotsString = gym.slots_available ? (gym.slots_available === 1 ? '1 Free Slot' : `${gym.slots_available} Free Slots`) : 'No Free Slots'
+    const teamName = gymTypes[gym.team_id]
+    const isUpcommingRaid = raid != null && Date.now() < raid.start
+    const isRaidStarted = raid != null &&
+        Date.now() < raid.end && Date.now() > raid.start
+
+    const title = (gym.name ? `<div class='gym name'>${gym.name}</div>` : '')
+    let subtitle = ''
+    let image = ''
+    let imageLbl = ''
+    let navInfo = ''
+    let memberStr = ''
+
+    const gymPoints = gym.total_cp
+
+
+    if(isUpcommingRaid || isRaidStarted) {
+        const raidColor = ['252,112,176', '255,158,22']
+        const raidStartStr = getTimeStr(raid['start'])
+        const raidStartDateStr = getDateStr(raid['start'])
+        const levelStr = '★'.repeat(raid['level'])
+        const raidEndsStr = getTimeStr(raid['end'])
+
+        if(isRaidStarted && raid.pokemon_id) {
+            image = `
+                <img class='gym sprite' src='static/forts/raid/${raid.pokemon_id}.png'>
+                ${raidStr}
+            `
+        }else {
+            image = `<img class='gym sprite' src='static/forts/raid/${gymTypes[gym.team_id]}_${getGymLevel(gym)}_${raid.level}.png'>`
+        }
+
+        if(isUpcommingRaid) {
+            if (gym.team_id !== 0) {
+                subtitle = `
+                      <div>
+                          <img class='gympoints' src='static/forts/gym/Strength.png'> 
+                          <span class='gym info'>
+                            Strength: ${gymPoints}
+                          </span> 
+                          <span class='gym stats slots free'>
+                            (${slotsString})
+                          </span>
+                      </div>
+                      `
+            }
+
+            imageLbl = `
+                <div class='raid start'>
+                  <span style='color:rgb(${raidColor[Math.floor((raid.level - 1) / 2)]})'>
+                  ${levelStr}
+                  </span> 
+                  raid ${isUpcommingRaid ? 'starts' : 'started'} ${raidStartDateStr} (<span class='raid disappear'>${raidStartStr}</span>)
+                </div>`
+        }else {
+
+            var typesDisplay = ''
+
+            $.each(raid.pokemon_types, function (index, type) {
+                typesDisplay += getTypeSpan(type)
+            })
+
+            subtitle = `                
+                <div class='raid start'>
+                  <span style='color:rgb(${raidColor[Math.floor((raid.level - 1) / 2)]})'>
+                  ${levelStr}
+                  </span> 
+                  raid ${isUpcommingRaid ? 'starts' : 'started'} ${raidStartDateStr} (<span class='raid disappear'>${raidStartStr}</span>)
+                </div>                 
+                   <div class='pokemon name'>                           
                         <b>${raid['pokemon_name']}</b>
                         <span> - </span>
                         <small>
                             <a href='http://www.pokemon.com/us/pokedex/${raid['pokemon_id']}' target='_blank' title='View in Pokedex'>#${raid['pokemon_id']}</a>
                         </small>
                         <span> - </span>
-                        <small>${typesDisplay}</small>
-                    </div>
-                    <div>
-                        CP: ${raid['cp']}
-                    </div>
-                    <div>
-                        Moves: ${pMove1} / ${pMove2}
-                    </div>`
+                        <small>${typesDisplay}</small>                      
+                </div>`
         }
-        raidStr += '<br>'
+    }else {
+        if (gym.team_id !== 0) {
+            subtitle = `
+                      <div>
+                          <img class='gympoints' src='static/forts/gym/Strength.png'> 
+                          <span class='gym info'>
+                            Strength: ${gymPoints}
+                          </span> 
+                          <span class='gym stats slots free'>
+                            (${slotsString})
+                          </span>
+                      </div>
+                      `
+            image =  `<img class='gym sprite' src='static/forts/gym/${teamName}_${getGymLevel(gym)}.png'>`
+        }
     }
-    const lastScannedStr = getDateStr(gym.last_scanned)
-    const lastModifiedStr = getDateStr(gym.last_modified)
-    const slotsString = gym.slots_available ? (gym.slots_available === 1 ? '1 Free Slot' : `${gym.slots_available} Free Slots`) : 'No Free Slots'
-    const teamName = gymTypes[gym.team_id]
-    const gymColor = ['85,85,85,1', '0,134,255,1', '255,26,26,1', '255,159,25,1']
-    const nameStr = (gym.name ? `<div class='gym name'>${gym.name}</div>` : '')
 
-    let str = `
-            <div>
-                <center>
-                    ${nameStr}
-                    <div class='gym teamname' style='color:rgba(${gymColor[gym.teamId]})'>
-                        ${teamName}
-                    </div>`
-    if (gym.team_id !== 0) {
-        str += `
-                    <div class='gym slots'>
-                        <span class='gym stats slots free'>${slotsString}</span>
-                    </div>`
-    }
-    str += `
-                    <img class='gym sprite' src='static/forts/gym/${teamName}.png'>
-                    ${raidStr}
-                </center>
-                <div class='gym container'>
-                    <div>
-                      <span class='gym info navigate'>
-                        <a href='javascript:void(0);' onclick='javascript:openMapDirections(${gym.latitude},${gym.longitude});' title='Open in Google Maps'>
-                          ${gym.latitude.toFixed(6)}, ${gym.longitude.toFixed(7)}
-                        </a>
-                      </span>
-                    </div>
-                    <div class='gym info last-scanned'>
-                        Last Scanned: ${lastScannedStr}
-                    </div>
-                    <div class='gym info last-modified'>
-                        Last Modified: ${lastModifiedStr}
-                    </div>
+
+    navInfo = `                            
+            <div class='gym container'>
+                <div>
+                  <span class='gym info navigate'>
+                    <a href='javascript:void(0);' onclick='javascript:openMapDirections(${gym.latitude},${gym.longitude});' title='Open in Google Maps'>
+                      ${gym.latitude.toFixed(6)}, ${gym.longitude.toFixed(7)}
+                    </a>
+                  </span>
                 </div>
-                    <div>
-                        ${memberStr}
-                    </div>
-            </div>`
-    return str
+                <div class='gym info last-scanned'>
+                    Last Scanned: ${lastScannedStr}
+                </div>
+                <div class='gym info last-modified'>
+                    Last Modified: ${lastModifiedStr}
+                </div>
+            </div>                   
+        </div>`
+
+
+    if (!isRaidStarted && includeMembers) {
+        memberStr = '<div>'
+
+        gym.pokemon.forEach((member) => {
+            memberStr += `
+            <span class='gym-member' title='${member.pokemon_name} | ${member.trainer_name} (Lvl ${member.trainer_level})'>
+              <center>
+                <div>
+                  <div>
+                    <i class='pokemon-sprite n${member.pokemon_id}'></i>
+                  </div>
+                  <div>
+                    <span class='gym pokemon'>${member.pokemon_name}</span>
+                  </div>
+                  <div class='cp'>
+                    <img class='cp heart' src='static/forts/gym/Heart.png'> <span class='cp value'>${member.cp_decayed}</span>
+                  </div>
+                </div>
+              </center>
+            </span>`
+    })
+
+        memberStr += '</div>'
+    }
+
+    var result = `
+        <div>
+            <center>
+                ${title}
+                ${subtitle}
+                ${image}            
+                ${imageLbl}            
+            </center>
+            ${navInfo}
+            
+            ${memberStr}
+        </div>
+      `
+
+    return result
 }
 
 function pokestopLabel(expireTime, latitude, longitude) {
@@ -775,7 +848,7 @@ function getIv(atk, def, stm) {
 function getPokemonLevel(cpMultiplier) {
     if (cpMultiplier < 0.734) {
         var pokemonLevel = (58.35178527 * cpMultiplier * cpMultiplier -
-                         2.838007664 * cpMultiplier + 0.8539209906)
+        2.838007664 * cpMultiplier + 0.8539209906)
     } else {
         pokemonLevel = 171.0112688 * cpMultiplier - 95.20425243
     }
@@ -958,8 +1031,8 @@ function setupGymMarker(item) {
 function updateGymMarker(item, marker) {
     if (item.raid !== null && item.raid.end > Date.now() && item.raid.pokemon_id !== null) {
         marker.setIcon({
-            url: 'static/icons/' + item.raid.pokemon_id + '.png',
-            scaledSize: new google.maps.Size(72, 72)
+            url: 'static/forts/raid/' + item.raid.pokemon_id + '.png',
+            scaledSize: new google.maps.Size(48, 48)
         })
         marker.setZIndex(500)
     } else if (item.raid !== null && item.raid.end > Date.now()) {
@@ -2016,7 +2089,7 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
                         </td>
                     </tr>
                     `
-            })
+        })
 
             pokemonHtml = `<table><tbody>${pokemonHtml}</tbody></table>`
         } else if (result.team_id === 0) {
@@ -2036,7 +2109,9 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
             `
         }
 
-        sidebar.innerHTML = `${headerHtml}${pokemonHtml}`
+        console.log(result);
+        var test = gymLabel(result, false);
+        sidebar.innerHTML = `${test}${pokemonHtml}`
 
         sidebarClose = document.createElement('a')
         sidebarClose.href = '#'
