@@ -318,11 +318,13 @@
     @media screen and (max-width: 480px) {
       .cp.sidebar.heart {
           height: 8px !important;
+          width:: 8px !important;
       }
     }
 
     .cp.sidebar.heart {
       height: 12px;
+      width: 12px;
     }
 
     .gym {
