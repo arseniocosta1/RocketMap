@@ -69,21 +69,21 @@ var unownForm = ['unset', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
 
 
 /*
-  text place holders:
-  <pkm> - pokemon name
-  <prc> - iv in percent without percent symbol
-  <atk> - attack as number
-  <def> - defense as number
-  <sta> - stamnia as number
-*/
+ text place holders:
+ <pkm> - pokemon name
+ <prc> - iv in percent without percent symbol
+ <atk> - attack as number
+ <def> - defense as number
+ <sta> - stamnia as number
+ */
 var notifyIvTitle = '<pkm> <prc>% (<atk>/<def>/<sta>)'
 var notifyNoIvTitle = '<pkm>'
 
 /*
-  text place holders:
-  <dist>  - disappear time
-  <udist> - time until disappear
-*/
+ text place holders:
+ <dist>  - disappear time
+ <udist> - time until disappear
+ */
 var notifyText = 'disappears at <dist> (<udist>)'
 
 //
@@ -547,13 +547,14 @@ function gymLabel(gym) {
     const raid = gym.raid
     let raidStr = ''
 
-    if (raid !== null && raid['end'] > Date.now()) {
-        if (raid['pokemon_id'] !== null) {
+
+    if (raid !== null && raid.end > Date.now()) {
+        if (raid.pokemon_id !== null) {
             const types = raid['pokemon_types']
             let typesDisplay = ''
             types.forEach(type => {
                 typesDisplay += getTypeSpan(type)
-            })
+        })
             const pMove1 = (moves[raid['move_1']] !== undefined) ? i8ln(moves[raid['move_1']]['name']) : 'gen/unknown'
             const pMove2 = (moves[raid['move_2']] !== undefined) ? i8ln(moves[raid['move_2']]['name']) : 'gen/unknown'
 
@@ -571,20 +572,58 @@ function gymLabel(gym) {
     const lastModifiedStr = getDateStr(gym.last_modified)
     const slotsString = gym.slots_available ? (gym.slots_available === 1 ? '1 Free Slot' : `${gym.slots_available} Free Slots`) : 'No Free Slots'
     const teamName = gymTypes[gym.team_id]
-    const nameStr = (gym.name ? `<div class='gym name'>${gym.name}</div>` : '')
+    const isUpcommingRaid = raid != null && Date.now() < raid.start
+    const isRaidStarted = raid != null &&
+        Date.now() < raid.end && Date.now() > raid.start
+
+    const title = (gym.name ? `<div class='gym name'>${gym.name}</div>` : '')
+    let subtitle = ''
+    let image = ''
+    let imageLbl = ''
+
+
     const gymPoints = gym.total_cp
+
 
     let str = `
             <div>
                 <center>
-                    ${nameStr}
+                    ${title}
                     `
 
-    var isUpcommingRaid = raid != null && Date.now() < raid.start
-    var isRaidStarted = raid != null &&
-      Date.now() < raid.end && Date.now() > raid.start
+    if(isUpcommingRaid || isRaidStarted) {
+        const raidColor = ['252,112,176', '255,158,22']
+        const raidStartStr = getTimeStr(raid['start'])
+        const raidStartDateStr = getDateStr(raid['start'])
+        const levelStr = '★'.repeat(raid['level'])
+        const raidEndsStr = getTimeStr(raid['end'])
 
-    if (isRaidStarted) {
+        subtitle = `
+                <div class='raid start'>
+                  <span style='color:rgb(${raidColor[Math.floor((raid.level - 1) / 2)]})'>
+                  ${levelStr}
+                  </span> 
+                  raid ${isUpcommingRaid ? 'starts' : 'started'} ${raidStartDateStr} (<span class='raid disappear'>${raidStartStr}</span>) ${raidEndsStr}
+                </div>`
+    }else {
+        if (gym.team_id !== 0) {
+            subtitle = `
+                      <div>
+                          <img class='gympoints' src='static/forts/gym/Strength.png'> 
+                          <span class='gym info'>
+                            Strength: ${gymPoints}
+                          </span> 
+                          <span class='gym stats slots free'>
+                            (${slotsString})
+                          </span>
+                      </div>
+                      `
+        }
+    }
+
+
+
+    if (isRaidStarted || isUpcommingRaid) {
         const raidColor = ['252,112,176', '255,158,22']
         const raidStartStr = getTimeStr(raid['start'])
         const raidStartDateStr = getDateStr(raid['start'])
@@ -594,22 +633,33 @@ function gymLabel(gym) {
         str += `
                 <div class='raid start'>
                   <span style='color:rgb(${raidColor[Math.floor((raid.level - 1) / 2)]})'>${levelStr}</span> raid ${isUpcommingRaid ? 'starts' : 'started'} ${raidStartDateStr} (<span class='raid disappear'>${raidStartStr}</span>) ${raidEndsStr}
-                </div>`
+                </div>
+                `
+
+        if(isRaidStarted && raid.pokemon_id) {
+            image = `<img class='gym sprite' src='static/forts/raid/${raid.pokemon_id}.png'>`
+        }else {
+            image = `<img class='gym sprite' src='static/forts/raid/${gymTypes[gym.team_id]}_${getGymLevel(gym)}_${raid.level}.png'>`
+        }
+
     } else if (gym.team_id !== 0) {
         str += `
                     <div>
                         <img class='gympoints' src='static/forts/gym/Strength.png'> <span class='gym info'>Strength: ${gymPoints}</span> <span class='gym stats slots free'>(${slotsString})</span>
                     </div>
                     `
+
+        image =  `<img class='gym sprite' src='static/forts/gym/${teamName}_${getGymLevel(gym)}.png'>`
+
     }
 
-    var gymIconSrc = `static/forts/gym/${teamName}_${getGymLevel(gym)}.png`
-
-    if (isUpcommingRaid) {
-        gymIconSrc = `static/forts/raid/${gymTypes[gym.team_id]}_${getGymLevel(gym)}_${raid.level}.png`
-    } else if (isRaidStarted && raid.pokemon_id !== null) {
-        gymIconSrc = `static/forts/raid/${raid.pokemon_id}.png`
-    }
+    var gymIconSrc =''
+    //
+    // if (isUpcommingRaid) {
+    //     gymIconSrc = `static/forts/raid/${gymTypes[gym.team_id]}_${getGymLevel(gym)}_${raid.level}.png`
+    // } else if (isRaidStarted && raid.pokemon_id !== null) {
+    //     gymIconSrc = `static/forts/raid/${raid.pokemon_id}.png`
+    // }
 
     let memberStr = ''
     if (!isRaidStarted) {
@@ -632,7 +682,7 @@ function gymLabel(gym) {
                 </div>
               </center>
             </span>`
-        })
+    })
 
         memberStr += '</div>'
     }
@@ -659,7 +709,19 @@ function gymLabel(gym) {
                 </div>
                         ${memberStr}
             </div>`
-    return str
+
+    var result = `
+    <div>
+        <center>
+            ${title}
+            ${subtitle}
+            ${image}
+            ${imageLbl}
+        </center>
+    </div>
+      `
+
+    return result
 }
 
 function pokestopLabel(expireTime, latitude, longitude) {
@@ -784,7 +846,7 @@ function getIv(atk, def, stm) {
 function getPokemonLevel(cpMultiplier) {
     if (cpMultiplier < 0.734) {
         var pokemonLevel = (58.35178527 * cpMultiplier * cpMultiplier -
-                         2.838007664 * cpMultiplier + 0.8539209906)
+        2.838007664 * cpMultiplier + 0.8539209906)
     } else {
         pokemonLevel = 171.0112688 * cpMultiplier - 95.20425243
     }
@@ -2025,7 +2087,7 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
                         </td>
                     </tr>
                     `
-            })
+        })
 
             pokemonHtml = `<table><tbody>${pokemonHtml}</tbody></table>`
         } else if (result.team_id === 0) {
