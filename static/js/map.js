@@ -1932,81 +1932,7 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
     })
 
     data.done(function (result) {
-        const lastScannedDateStr = getDateStr(result.last_scanned)
-        const lastModifiedDateStr = getDateStr(result.last_modified)
-        const slotsString = result.slots_available ? (result.slots_available === 1 ? '1 Free Slot' : `${result.slots_available} Free Slots`) : 'No Free Slots'
-        let gymLevelStr = ''
-        const gymName = result.name ? `<div class='gym name'>${result.name}</div>` : ''
 
-        if (result.team_id !== 0) {
-            gymLevelStr += `
-            <div class='gym slots'>
-                <span class='gym stats slots free'>${slotsString}</span>
-            </div>`
-        }
-        gymLevelStr += `
-            <img class='gym sprite sidebar' src='static/forts/gym/${gymTypes[result.team_id]}.png'>
-            </div>`
-        var headerHtml = `
-        <center>
-            ${gymName}
-            ${gymLevelStr}
-        </center>
-            <div class='gym container'>
-                <div>
-                  <span class='gym info navigate'><a href='javascript:void(0);' onclick='javascript:openMapDirections(${result.latitude},${result.longitude});' title='Open in Google Maps'>${result.latitude}, ${result.longitude}</a></span>
-                </div>
-                <div class='gym info last-scanned'>
-                    Last Scanned: ${lastScannedDateStr}
-                </div>
-                <div class='gym info last-modified'>
-                    Last Modified: ${lastModifiedDateStr}
-                </div>
-            </div>
-        `
-        if (result.raid && result.raid.end > Date.now()) {
-            var raid = result.raid
-            var raidStartStr = getTimeStr(raid['start'])
-            var raidEndsStr = getTimeStr(raid['end'])
-            var levelStr = '★'.repeat(raid['level'])
-            headerHtml += `
-                    <center>
-                        <div>
-                            Raid: ${levelStr}
-                        </div>
-                        <div>
-                            <div style="margin-bottom: 10px">Time: <b>${raidStartStr}</b> - <b>${raidEndsStr}</b></div>
-                        </div>`
-            if (raid['pokemon_id'] !== null) {
-                var types = raid['pokemon_types']
-                var typesDisplay = ''
-                var pMove1 = (moves[raid['move_1']] !== undefined) ? i8ln(moves[raid['move_1']]['name']) : 'gen/unknown'
-                var pMove2 = (moves[raid['move_2']] !== undefined) ? i8ln(moves[raid['move_2']]['name']) : 'gen/unknown'
-
-                $.each(types, function (index, type) {
-                    typesDisplay += getTypeSpan(type)
-                })
-
-                headerHtml += `
-                        <div>
-                            <div><img src='static/icons/${raid['pokemon_id']}.png'></div>
-                            <b>${raid['pokemon_name']}</b>
-                            <span> - </span>
-                            <small>
-                                <a href='http://www.pokemon.com/us/pokedex/${raid['pokemon_id']}' target='_blank' title='View in Pokedex'>#${raid['pokemon_id']}</a>
-                            </small>
-                            <span> - </span>
-                            <small>${typesDisplay}</small>
-                        </div>
-                        <div>
-                            CP: ${raid['cp']}
-                        </div>
-                        <div>
-                            Moves: ${pMove1} / ${pMove2}
-                        </div>`
-            }
-            headerHtml += '</center><br>'
-        }
         var pokemonHtml = ''
         if (result.pokemon.length) {
             result.pokemon.forEach((pokemon) => {
@@ -2109,7 +2035,6 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
             `
         }
 
-        console.log(result);
         var test = gymLabel(result, false);
         sidebar.innerHTML = `${test}${pokemonHtml}`
 
