@@ -543,7 +543,7 @@ function pokemonLabel(item) {
     return contentstring
 }
 
-function gymLabel(gym) {
+function gymLabel(gym, includeMembers = true) {
     const raid = gym.raid
     let raidStr = ''
 
@@ -684,7 +684,7 @@ function gymLabel(gym) {
         </div>`
 
 
-    if (!isRaidStarted) {
+    if (!isRaidStarted && includeMembers) {
         memberStr = '<div>'
 
         gym.pokemon.forEach((member) => {
@@ -2109,7 +2109,9 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
             `
         }
 
-        sidebar.innerHTML = `${headerHtml}${pokemonHtml}`
+        console.log(result);
+        var test = gymLabel(result, false);
+        sidebar.innerHTML = `${test}${pokemonHtml}`
 
         sidebarClose = document.createElement('a')
         sidebarClose.href = '#'
