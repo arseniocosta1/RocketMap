@@ -547,7 +547,6 @@ function gymLabel(gym) {
     const raid = gym.raid
     let raidStr = ''
 
-
     if (raid !== null && raid.end > Date.now()) {
         if (raid.pokemon_id !== null) {
             const types = raid['pokemon_types']
@@ -560,8 +559,7 @@ function gymLabel(gym) {
 
             raidStr += `
                     <div class='raid'>
-                        <img class='raid cp heart' src='static/forts/gym/Heart.png'> <span class='raid cp'>${raid['cp']}</span>
-                            <a href='http://pokemon.gameinfo.io/en/pokemon/${raid['pokemon_id']}' target='_blank' title='View in Pokedex'>#${raid['pokemon_id']}</a> ${typesDisplay}
+                       <b>CP:</b> <span class='raid cp'>${raid['cp']}</span>                            
                     </div>
                     <div>
                          Moveset: <span class='raid encounter'>${pMove1}/${pMove2}</span>
@@ -580,16 +578,11 @@ function gymLabel(gym) {
     let subtitle = ''
     let image = ''
     let imageLbl = ''
-
+    let navInfo = ''
+    let memberStr = ''
 
     const gymPoints = gym.total_cp
 
-
-    let str = `
-            <div>
-                <center>
-                    ${title}
-                    `
 
     if(isUpcommingRaid || isRaidStarted) {
         const raidColor = ['252,112,176', '255,158,22']
@@ -598,13 +591,62 @@ function gymLabel(gym) {
         const levelStr = '★'.repeat(raid['level'])
         const raidEndsStr = getTimeStr(raid['end'])
 
-        subtitle = `
+        if(isRaidStarted && raid.pokemon_id) {
+            image = `
+                <img class='gym sprite' src='static/forts/raid/${raid.pokemon_id}.png'>
+                ${raidStr}
+            `
+        }else {
+            image = `<img class='gym sprite' src='static/forts/raid/${gymTypes[gym.team_id]}_${getGymLevel(gym)}_${raid.level}.png'>`
+        }
+
+        if(isUpcommingRaid) {
+            if (gym.team_id !== 0) {
+                subtitle = `
+                      <div>
+                          <img class='gympoints' src='static/forts/gym/Strength.png'> 
+                          <span class='gym info'>
+                            Strength: ${gymPoints}
+                          </span> 
+                          <span class='gym stats slots free'>
+                            (${slotsString})
+                          </span>
+                      </div>
+                      `
+            }
+
+            imageLbl = `
                 <div class='raid start'>
                   <span style='color:rgb(${raidColor[Math.floor((raid.level - 1) / 2)]})'>
                   ${levelStr}
                   </span> 
-                  raid ${isUpcommingRaid ? 'starts' : 'started'} ${raidStartDateStr} (<span class='raid disappear'>${raidStartStr}</span>) ${raidEndsStr}
+                  raid ${isUpcommingRaid ? 'starts' : 'started'} ${raidStartDateStr} (<span class='raid disappear'>${raidStartStr}</span>)
                 </div>`
+        }else {
+
+            var typesDisplay = ''
+
+            $.each(raid.pokemon_types, function (index, type) {
+                typesDisplay += getTypeSpan(type)
+            })
+
+            subtitle = `                
+                <div class='raid start'>
+                  <span style='color:rgb(${raidColor[Math.floor((raid.level - 1) / 2)]})'>
+                  ${levelStr}
+                  </span> 
+                  raid ${isUpcommingRaid ? 'starts' : 'started'} ${raidStartDateStr} (<span class='raid disappear'>${raidStartStr}</span>)
+                </div>                 
+                   <div class='pokemon name'>                           
+                        <b>${raid['pokemon_name']}</b>
+                        <span> - </span>
+                        <small>
+                            <a href='http://www.pokemon.com/us/pokedex/${raid['pokemon_id']}' target='_blank' title='View in Pokedex'>#${raid['pokemon_id']}</a>
+                        </small>
+                        <span> - </span>
+                        <small>${typesDisplay}</small>                      
+                </div>`
+        }
     }else {
         if (gym.team_id !== 0) {
             subtitle = `
@@ -618,50 +660,30 @@ function gymLabel(gym) {
                           </span>
                       </div>
                       `
+            image =  `<img class='gym sprite' src='static/forts/gym/${teamName}_${getGymLevel(gym)}.png'>`
         }
     }
 
 
-
-    if (isRaidStarted || isUpcommingRaid) {
-        const raidColor = ['252,112,176', '255,158,22']
-        const raidStartStr = getTimeStr(raid['start'])
-        const raidStartDateStr = getDateStr(raid['start'])
-        const levelStr = '★'.repeat(raid['level'])
-        const raidEndsStr = getTimeStr(raid['end'])
-
-        str += `
-                <div class='raid start'>
-                  <span style='color:rgb(${raidColor[Math.floor((raid.level - 1) / 2)]})'>${levelStr}</span> raid ${isUpcommingRaid ? 'starts' : 'started'} ${raidStartDateStr} (<span class='raid disappear'>${raidStartStr}</span>) ${raidEndsStr}
+    navInfo = `                            
+            <div class='gym container'>
+                <div>
+                  <span class='gym info navigate'>
+                    <a href='javascript:void(0);' onclick='javascript:openMapDirections(${gym.latitude},${gym.longitude});' title='Open in Google Maps'>
+                      ${gym.latitude.toFixed(6)}, ${gym.longitude.toFixed(7)}
+                    </a>
+                  </span>
                 </div>
-                `
+                <div class='gym info last-scanned'>
+                    Last Scanned: ${lastScannedStr}
+                </div>
+                <div class='gym info last-modified'>
+                    Last Modified: ${lastModifiedStr}
+                </div>
+            </div>                   
+        </div>`
 
-        if(isRaidStarted && raid.pokemon_id) {
-            image = `<img class='gym sprite' src='static/forts/raid/${raid.pokemon_id}.png'>`
-        }else {
-            image = `<img class='gym sprite' src='static/forts/raid/${gymTypes[gym.team_id]}_${getGymLevel(gym)}_${raid.level}.png'>`
-        }
 
-    } else if (gym.team_id !== 0) {
-        str += `
-                    <div>
-                        <img class='gympoints' src='static/forts/gym/Strength.png'> <span class='gym info'>Strength: ${gymPoints}</span> <span class='gym stats slots free'>(${slotsString})</span>
-                    </div>
-                    `
-
-        image =  `<img class='gym sprite' src='static/forts/gym/${teamName}_${getGymLevel(gym)}.png'>`
-
-    }
-
-    var gymIconSrc =''
-    //
-    // if (isUpcommingRaid) {
-    //     gymIconSrc = `static/forts/raid/${gymTypes[gym.team_id]}_${getGymLevel(gym)}_${raid.level}.png`
-    // } else if (isRaidStarted && raid.pokemon_id !== null) {
-    //     gymIconSrc = `static/forts/raid/${raid.pokemon_id}.png`
-    // }
-
-    let memberStr = ''
     if (!isRaidStarted) {
         memberStr = '<div>'
 
@@ -687,38 +709,18 @@ function gymLabel(gym) {
         memberStr += '</div>'
     }
 
-
-    str += `
-                    <img class='gym sprite' src='${gymIconSrc}'>
-                    ${raidStr}
-                </center>
-                <div class='gym container'>
-                    <div>
-                      <span class='gym info navigate'>
-                        <a href='javascript:void(0);' onclick='javascript:openMapDirections(${gym.latitude},${gym.longitude});' title='Open in Google Maps'>
-                          ${gym.latitude.toFixed(6)}, ${gym.longitude.toFixed(7)}
-                        </a>
-                      </span>
-                    </div>
-                    <div class='gym info last-scanned'>
-                        Last Scanned: ${lastScannedStr}
-                    </div>
-                    <div class='gym info last-modified'>
-                        Last Modified: ${lastModifiedStr}
-                    </div>
-                </div>
-                        ${memberStr}
-            </div>`
-
     var result = `
-    <div>
-        <center>
-            ${title}
-            ${subtitle}
-            ${image}
-            ${imageLbl}
-        </center>
-    </div>
+        <div>
+            <center>
+                ${title}
+                ${subtitle}
+                ${image}            
+                ${imageLbl}            
+            </center>
+            ${navInfo}
+            
+            ${memberStr}
+        </div>
       `
 
     return result
