@@ -2034,8 +2034,8 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
             `
         }
 
-        var test = gymLabel(result, false);
-        sidebar.innerHTML = `${test}${pokemonHtml}`
+        var topPart = gymLabel(result, false);
+        sidebar.innerHTML = `${topPart}${pokemonHtml}`
 
         sidebarClose = document.createElement('a')
         sidebarClose.href = '#'
