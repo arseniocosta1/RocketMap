@@ -1,30 +1,10 @@
 .raid {
   color: rgb(93,109,126);
   font-size: 12px;
+  font-weight: 900;
+  margin-bottom: 5px;
 
-  &.cp {
-    color: rgb(93,109,126);
-    font-weight: 900;
-
-    &.heart {
-      height: 16px;
-      width: 16px;
-      vertical-align: bottom;
-    }
-  }
-
-  &.encounter {
-    font-size: 11px;
-    font-weight: 900;
-  }
-
-  &.start {
-    color: rgb(93,109,126);
-    font-size: 11px;
-    font-weight: 500;
-  }
-
-  &.disappear {
+  &.countdown {
 
     &:before {
       content: '\f017';
@@ -37,8 +17,24 @@
     }
   }
 
+  &.encounter {
+    font-size: 14px;
+    font-weight: 500;
+
+    &.cp {
+      font-weight: 900;
+    }
+
+    &.moveset {
+      font-size: 12px;
+
+      &.move {
+        font-weight: 900;
+      }
+    }
+  }
+
   &.pokemon.name {
     font-size: 14px;
-    font-weight: 900;
   }
 }
