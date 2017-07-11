@@ -2,20 +2,4 @@
 
   display: inline-block;
   margin-left: 1px;
-
-  .cp {
-    color: rgb(93,109,126);
-    font-size: 8px;
-    font-weight: 500;
-
-    &.heart {
-      height: 8px;
-      width: 8px;
-    }
-
-    &.value {
-      font-size: 10px;
-      font-weight: 900;
-    }
-  }
 }
