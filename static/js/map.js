@@ -620,7 +620,7 @@ function gymLabel(gym, includeMembers = true) {
                   <span style='color:rgb(${raidColor[Math.floor((raid.level - 1) / 2)]})'>
                   ${levelStr}
                   </span> 
-                  raid ${isUpcommingRaid ? 'starts' : 'started'} ${raidStartDateStr} (<span class='raid disappear'>${raidStartStr}</span>)
+                  raid starts ${raidStartStr} (<span class='raid disappear label-countdown' disappears-at='${raid.start}'></span>)
                 </div>`
         }else {
 
@@ -635,7 +635,7 @@ function gymLabel(gym, includeMembers = true) {
                   <span style='color:rgb(${raidColor[Math.floor((raid.level - 1) / 2)]})'>
                   ${levelStr}
                   </span> 
-                  raid ${isUpcommingRaid ? 'starts' : 'started'} ${raidStartDateStr} (<span class='raid disappear'>${raidStartStr}</span>)
+                  raid started ending at ${raidEndsStr} (<span class='raid disappear label-countdown' disappears-at='${raid.end}'></span> left)
                 </div>                 
                    <div class='pokemon name'>                           
                         <b>${raid['pokemon_name']}</b>
@@ -1025,6 +1025,7 @@ function setupGymMarker(item) {
     } else {
         addListeners(marker)
     }
+
     return marker
 }
 
@@ -1688,7 +1689,7 @@ function redrawPokemon(pokemonList) {
 var updateLabelDiffTime = function () {
     $('.label-countdown').each(function (index, element) {
         var disappearsAt = getTimeUntil(parseInt(element.getAttribute('disappears-at')))
-
+        
         var hours = disappearsAt.hour
         var minutes = disappearsAt.min
         var seconds = disappearsAt.sec
