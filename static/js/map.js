@@ -401,7 +401,7 @@ function initSidebar() {
 }
 
 function getTypeSpan(type) {
-    return `<img class='pokemon elements' src='static/images/elements//${type['type']}.png'></span>`
+    return `<img class='pokemon elements' src='static/images/elements/${type['type']}.png'></span>`
 }
 
 function openMapDirections(lat, lng) { // eslint-disable-line no-unused-vars
