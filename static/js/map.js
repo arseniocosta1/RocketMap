@@ -535,6 +535,10 @@ function pokemonLabel(item) {
     return contentstring
 }
 
+function isOngoingRaid(raid) {
+    return raid && Date.now() < raid.end && Date.now() > raid.start
+}
+
 function gymLabel(gym, includeMembers = true) {
     const raid = gym.raid
     let raidStr = ''
@@ -558,7 +562,7 @@ function gymLabel(gym, includeMembers = true) {
     const teamColor = ['85,85,85,1', '0,134,255,1', '255,26,26,1', '255,159,25,1']
     const teamName = gymTypes[gym.team_id]
     const isUpcommingRaid = raid != null && Date.now() < raid.start
-    const isRaidStarted = raid != null && Date.now() < raid.end && Date.now() > raid.start
+    const isRaidStarted = isOngoingRaid(raid)
 
     let subtitle = ''
     let image = ''
@@ -1896,11 +1900,53 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
     data.done(function (result) {
         var pokemonHtml = ''
         if (result.pokemon.length) {
-            result.pokemon.forEach((pokemon) => {
-                var perfectPercent = getIv(pokemon.iv_attack, pokemon.iv_defense, pokemon.iv_stamina)
-                var moveEnergy = Math.round(100 / pokemon.move_2_energy)
+            if(!isOngoingRaid(result.raid)) {
+                result.pokemon.forEach((pokemon) => {
+                    pokemonHtml += getSidebarGymMember(pokemon)
+            })
 
-                pokemonHtml += `
+                pokemonHtml = `<table><tbody>${pokemonHtml}</tbody></table>`
+            }
+        } else if (result.team_id === 0) {
+            pokemonHtml = ''
+        } else {
+            pokemonHtml = `
+                <center>
+                    Gym Leader:<br>
+                    <i class="pokemon-large-sprite n${result.guard_pokemon_id}"></i><br>
+                    <b>${result.guard_pokemon_name}</b>
+
+                    <p style="font-size: .75em; margin: 5px;">
+                        No additional gym information is available for this gym. Make sure you are collecting <a href="https://rocketmap.readthedocs.io/en/develop/extras/gyminfo.html">detailed gym info.</a>
+                        If you have detailed gym info collection running, this gym's Pokemon information may be out of date.
+                    </p>
+                </center>
+            `
+        }
+
+        var topPart = gymLabel(result, false)
+        sidebar.innerHTML = `${topPart}${pokemonHtml}`
+
+        sidebarClose = document.createElement('a')
+        sidebarClose.href = '#'
+        sidebarClose.className = 'close'
+        sidebarClose.tabIndex = 0
+        sidebar.appendChild(sidebarClose)
+
+        sidebarClose.addEventListener('click', function (event) {
+            event.preventDefault()
+            event.stopPropagation()
+            sidebar.classList.remove('visible')
+        })
+    })
+}
+
+function getSidebarGymMember(pokemon) {
+    var perfectPercent = getIv(pokemon.iv_attack, pokemon.iv_defense, pokemon.iv_stamina)
+    var moveEnergy = Math.round(100 / pokemon.move_2_energy)
+
+
+    return `
                     <tr onclick=toggleGymPokemonDetails(this)>
                         <td width="30px">
                             <img class="pokemon sprite" src="static/icons/${pokemon.pokemon_id}.png">
@@ -1975,41 +2021,8 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
                         </td>
                     </tr>
                     `
-            })
 
-            pokemonHtml = `<table><tbody>${pokemonHtml}</tbody></table>`
-        } else if (result.team_id === 0) {
-            pokemonHtml = ''
-        } else {
-            pokemonHtml = `
-                <center>
-                    Gym Leader:<br>
-                    <i class="pokemon-large-sprite n${result.guard_pokemon_id}"></i><br>
-                    <b>${result.guard_pokemon_name}</b>
 
-                    <p style="font-size: .75em; margin: 5px;">
-                        No additional gym information is available for this gym. Make sure you are collecting <a href="https://rocketmap.readthedocs.io/en/develop/extras/gyminfo.html">detailed gym info.</a>
-                        If you have detailed gym info collection running, this gym's Pokemon information may be out of date.
-                    </p>
-                </center>
-            `
-        }
-
-        var topPart = gymLabel(result, false)
-        sidebar.innerHTML = `${topPart}${pokemonHtml}`
-
-        sidebarClose = document.createElement('a')
-        sidebarClose.href = '#'
-        sidebarClose.className = 'close'
-        sidebarClose.tabIndex = 0
-        sidebar.appendChild(sidebarClose)
-
-        sidebarClose.addEventListener('click', function (event) {
-            event.preventDefault()
-            event.stopPropagation()
-            sidebar.classList.remove('visible')
-        })
-    })
 }
 
 function toggleGymPokemonDetails(e) { // eslint-disable-line no-unused-vars
