@@ -8,6 +8,11 @@
     justify-content: center;
   }
 
+  &.member {
+    display: inline-block;
+    margin-left: 1px;
+  }
+
   &.name {
     font-size: 14px;
     font-weight: 900;

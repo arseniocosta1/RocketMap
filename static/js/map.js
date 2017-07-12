@@ -653,7 +653,7 @@ function gymLabel(gym, includeMembers = true) {
 
         gym.pokemon.forEach((member) => {
             memberStr += `
-            <span class='gym-member' title='${member.pokemon_name} | ${member.trainer_name} (Lvl ${member.trainer_level})'>
+            <span class='gym member'>
               <center>
                 <div>
                   <div>
