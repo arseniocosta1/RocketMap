@@ -91,13 +91,13 @@ function countMarkers(map) { // eslint-disable-line no-unused-vars
         for (i = 0; i < arenaCount.length; i++) {
             if (arenaCount[i] > 0) {
                 if (i === 1) {
-                    arenaListString += '<tr><td><img class="arenaListString" src="static/forts/gym/Mystic.png" /></td><td>' + 'Mystic' + '</td><td>' + arenaCount[i] + '</td><td>' + Math.round(arenaCount[i] * 100 / arenaTotal * 10) / 10 + '%</td></tr>'
+                    arenaListString += '<tr><td><img class="arenaListString" src="static/images/gym/Mystic.png" /></td><td>' + 'Mystic' + '</td><td>' + arenaCount[i] + '</td><td>' + Math.round(arenaCount[i] * 100 / arenaTotal * 10) / 10 + '%</td></tr>'
                 } else if (i === 2) {
-                    arenaListString += '<tr><td><img class="arenaListString" src="static/forts/gym/Valor.png" /></td><td>' + 'Valor' + '</td><td>' + arenaCount[i] + '</td><td>' + Math.round(arenaCount[i] * 100 / arenaTotal * 10) / 10 + '%</td></tr>'
+                    arenaListString += '<tr><td><img class="arenaListString" src="static/images/gym/Valor.png" /></td><td>' + 'Valor' + '</td><td>' + arenaCount[i] + '</td><td>' + Math.round(arenaCount[i] * 100 / arenaTotal * 10) / 10 + '%</td></tr>'
                 } else if (i === 3) {
-                    arenaListString += '<tr><td><img class="arenaListString" src="static/forts/gym/Instinct.png" /></td><td>' + 'Instinct' + '</td><td>' + arenaCount[i] + '</td><td>' + Math.round(arenaCount[i] * 100 / arenaTotal * 10) / 10 + '%</td></tr>'
+                    arenaListString += '<tr><td><img class="arenaListString" src="static/images/gym/Instinct.png" /></td><td>' + 'Instinct' + '</td><td>' + arenaCount[i] + '</td><td>' + Math.round(arenaCount[i] * 100 / arenaTotal * 10) / 10 + '%</td></tr>'
                 } else {
-                    arenaListString += '<tr><td><img class="arenaListString" src="static/forts/gym/Uncontested.png" /></td><td>' + 'Uncontested' + '</td><td>' + arenaCount[i] + '</td><td>' + Math.round(arenaCount[i] * 100 / arenaTotal * 10) / 10 + '%</td></tr>'
+                    arenaListString += '<tr><td><img class="arenaListString" src="static/images/gym/Uncontested.png" /></td><td>' + 'Uncontested' + '</td><td>' + arenaCount[i] + '</td><td>' + Math.round(arenaCount[i] * 100 / arenaTotal * 10) / 10 + '%</td></tr>'
                 }
             }
         }
@@ -133,9 +133,9 @@ function countMarkers(map) { // eslint-disable-line no-unused-vars
         for (i = 0; i < pokestopCount.length; i++) {
             if (pokestopCount[i] > 0) {
                 if (i === 0) {
-                    pokestopListString += '<tr><td><img class="pokestopListString" src="static/forts/pokestop/Pokestop.png" /></td><td>' + 'Not Lured' + '</td><td>' + pokestopCount[i] + '</td><td>' + Math.round(pokestopCount[i] * 100 / pokestopTotal * 10) / 10 + '%</td></tr>'
+                    pokestopListString += '<tr><td><img class="pokestopListString" src="static/images/pokestop/Pokestop.png" /></td><td>' + 'Not Lured' + '</td><td>' + pokestopCount[i] + '</td><td>' + Math.round(pokestopCount[i] * 100 / pokestopTotal * 10) / 10 + '%</td></tr>'
                 } else if (i === 1) {
-                    pokestopListString += '<tr><td><img class="pokestopListString" src="static/forts/pokestop/PokestopLured.png" /></td><td>' + 'Lured' + '</td><td>' + pokestopCount[i] + '</td><td>' + Math.round(pokestopCount[i] * 100 / pokestopTotal * 10) / 10 + '%</td></tr>'
+                    pokestopListString += '<tr><td><img class="pokestopListString" src="static/images/pokestop/PokestopLured.png" /></td><td>' + 'Lured' + '</td><td>' + pokestopCount[i] + '</td><td>' + Math.round(pokestopCount[i] * 100 / pokestopTotal * 10) / 10 + '%</td></tr>'
                 }
             }
         }
