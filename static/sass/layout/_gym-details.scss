@@ -304,131 +304,46 @@
       }
     }
 
-    @media screen and (max-width: 480px) {
-      .cp.sidebar.value {
-        font-size: 10px !important;
-      }
-    }
-
-    .cp.sidebar.value {
-      font-size: 14px;
-      font-weight: 900;
-    }
-
-    @media screen and (max-width: 480px) {
-      .cp.sidebar.heart {
-          height: 8px !important;
-          width:: 8px !important;
-      }
-    }
-
-    .cp.sidebar.heart {
-      height: 12px;
-      width: 12px;
-    }
-
     .gym {
+      @media screen and (max-width: 480px) {
+        font-size: 11px !important;
+      }
       color: rgb(93,109,126);
-      font-size: 18px;
+      font-size: 16px;
+      font-weight: 500;
 
       &.container {
         display: grid;
         justify-content: center;
       }
 
-      @media screen and (max-width: 480px) {
-        &.name {
-          font-size: 16px !important;
-        }
-      }
-
-      @media screen and (max-width: 320px) {
-        &.name {
+      &.name {
+        @media screen and (max-width: 480px) {
           font-size: 14px !important;
         }
-      }
-
-      &.name {
+        font-size: 18px;
         font-weight: 900;
+        margin-bottom: 2px;
         text-decoration: underline;
       }
 
-      @media screen and (max-width: 480px) {
-        &.teamname {
-          font-size: 16px !important;
+      &.sprite {
+        @media screen and (max-width: 480px) {
+          height: 48px !important;
+          width:: 48px !important;
         }
-      }
-
-      @media screen and (max-width: 320px) {
-        &.teamname {
-          font-size: 14px !important;
-          margin-bottom: 5px !important;
-        }
-      }
-
-      &.teamname {
-
-        &.team-0 {
-          color: rgba(85,85,85,1);
-        }
-
-        &.team-1 {
-          color: rgba(0,134,255,1);
-        }
-
-        &.team-2 {
-          color: rgba(255,26,26,1);
-        }
-
-        &.team-3 {
-          color: rgba(255,159,25,1);
-        }
-      }
-
-      @media screen and (max-width: 480px) {
-        &.stats {
-          font-size: 12px;
-        }
-      }
-
-      @media screen and (max-width: 320px) {
-        &.slots {
-          font-size: 14px !important;
-        }
-      }
-
-      &.slots {
-        font-size: 16px;
-        font-weight: 900;
-        margin-bottom: 5px;
-
-        &.free:before {
-          content: '\f007';
-          display: inline-block;
-          font-family: FontAwesome;
-          margin: 5px 5px 0px 0px;
-          height: 16px;
-          width: 16px;
-          -webkit-font-smoothing: antialiased;
-        }
-      }
-
-      @media screen and (max-width: 480px) {
-        &.info {
-          font-size: 12px !important;
-        }
+        display: block;
+        height: 96px;
+        width: 96px;
+        margin: 10px 0px 10px 0px;
       }
 
       &.info {
-        color: rgb(93,109,126);
-        font-size: 16px;
-        font-weight: 500;
 
         &.last-modified:before {
           content: '\f040';
           display: inline-block;
           font-family: FontAwesome;
-          margin: 0px 5px 15px 0px;
           height: 16px;
           width: 16px;
           -webkit-font-smoothing: antialiased;
@@ -438,7 +353,6 @@
           content: '\f002';
           display: inline-block;
           font-family: FontAwesome;
-          margin: 0px 5px 0px 0px;
           height: 16px;
           width: 16px;
           -webkit-font-smoothing: antialiased;
@@ -448,18 +362,77 @@
           content: '\f018';
           display: inline-block;
           font-family: FontAwesome;
-          margin: 10px 10px 0px 0px;
+          height: 16px;
+          width: 16px;
+          -webkit-font-smoothing: antialiased;
+        }
+
+        &.strength {
+          @media screen and (max-width: 480px) {
+            height: 12px !important;
+            width:: 12px !important;
+          }
+          font-weight: 900;
+          height: 16px;
+          width: 16px;
+          vertical-align: middle;
+        }
+      }
+
+      &.pokemon {
+        font-size: 14px;
+
+        &.motivation {
+          font-weight: 900;
+
+          &.heart {
+            height: 16px;
+            width: 16px;
+            margin-right: -1px;
+            vertical-align: middle;
+          }
+        }
+
+        &.trainer {
+          font-weight: 900;
+        }
+      }
+    }
+
+    .raid {
+      @media screen and (max-width: 480px) {
+        font-size: 11px !important;
+      }
+      color: rgb(93,109,126);
+      font-size: 16px;
+      font-weight: 900;
+      margin-bottom: 5px;
+
+      &.countdown {
+
+        &:before {
+          @media screen and (max-width: 480px) {
+            margin: 0px -2px 0px -2px !important;
+          }
+          content: '\f017';
+          display: inline-block;
+          font-family: FontAwesome;
+          margin: 0px 2px 0px 0px;
           height: 16px;
           width: 16px;
           -webkit-font-smoothing: antialiased;
         }
       }
-    }
 
-    .gym.sprite.sidebar {
-      display: block;
-      height: 96px;
-      width: 96px;
-    }
+      &.encounter {
+        font-weight: 500;
 
+        &.info {
+          font-weight: 900;
+        }
+      }
+
+      &.pokemon.name {
+      }
+    }
   }

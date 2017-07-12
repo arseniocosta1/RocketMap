@@ -538,22 +538,17 @@ function pokemonLabel(item) {
 function gymLabel(gym, includeMembers = true) {
     const raid = gym.raid
     let raidStr = ''
-
-    if (raid !== null && raid.end > Date.now()) {
+    if (raid && raid.end > Date.now()) {
         if (raid.pokemon_id !== null) {
-            const types = raid['pokemon_types']
-            types.forEach(type => {
-                typesDisplay += getTypeSpan(type)
-            })
             const pMove1 = (moves[raid['move_1']] !== undefined) ? i8ln(moves[raid['move_1']]['name']) : 'gen/unknown'
             const pMove2 = (moves[raid['move_2']] !== undefined) ? i8ln(moves[raid['move_2']]['name']) : 'gen/unknown'
 
             raidStr += `
                     <div class='raid encounter'>
-                       CP: <span class='raid encounter cp'>${raid['cp']}</span>
+                       CP: <span class='raid encounter info'>${raid['cp']}</span>
                     </div>
-                    <div class='raid encounter moveset'>
-                         Moveset: <span class='rraid encounter moveset move'>${pMove1}/${pMove2}</span>
+                    <div class='raid encounter'>
+                         Moveset: <span class='raid encounter info'>${pMove1}/${pMove2}</span>
                     </div>`
         }
     }
@@ -563,10 +558,8 @@ function gymLabel(gym, includeMembers = true) {
     const teamColor = ['85,85,85,1', '0,134,255,1', '255,26,26,1', '255,159,25,1']
     const teamName = gymTypes[gym.team_id]
     const isUpcommingRaid = raid != null && Date.now() < raid.start
-    const isRaidStarted = raid != null &&
-        Date.now() < raid.end && Date.now() > raid.start
+    const isRaidStarted = raid != null && Date.now() < raid.end && Date.now() > raid.start
 
-    const title = (gym.name ? `<div class='gym name' style='color:rgba(${teamColor[gym.team_id]})'>${gym.name}</div>` : '')
     let subtitle = ''
     let image = ''
     let imageLbl = ''
@@ -574,7 +567,21 @@ function gymLabel(gym, includeMembers = true) {
     let memberStr = ''
 
     const gymPoints = gym.total_cp
+    const titleText = gym.name ? gym.name : (gym.team_id === 0 ? teamName : 'Team ' + teamName)
+    const title = `
+      <div class='gym name' style='color:rgba(${teamColor[gym.team_id]})'>
+        ${titleText}
+      </div>`
 
+    if (gym.team_id !== 0) {
+        subtitle = `
+        <div>
+            <img class='gym info strength' src='static/images/gym/Strength.png'>
+            <span class='gym info strength'>
+              Strength: ${gymPoints} (${slotsString})
+            </span>
+        </div>`
+    }
 
     if (isUpcommingRaid || isRaidStarted) {
         const raidColor = ['252,112,176', '255,158,22']
@@ -590,26 +597,15 @@ function gymLabel(gym, includeMembers = true) {
         }
 
         if (isUpcommingRaid) {
-            if (gym.team_id !== 0) {
-                subtitle = `
-                <div>
-                    <img class='gym info strength' src='static/images/gym/Strength.png'>
-                    <span class='gym'>
-                      Strength: ${gymPoints} (${slotsString})
-                    </span>
-                </div>
-                      `
-            }
-
             imageLbl = `
                 <div class='raid'>
                   <span style='color:rgb(${raidColor[Math.floor((raid.level - 1) / 2)]})'>
                   ${levelStr}
                   </span>
-                  <span class='raid countdown label-countdown' disappears-at='${raid.start}'></span>
+                  starts in <span class='raid countdown label-countdown' disappears-at='${raid.start}'></span>
                 </div>`
         } else {
-            var typesDisplay = ''
+            let typesDisplay = ''
 
             $.each(raid.pokemon_types, function (index, type) {
                 typesDisplay += getTypeSpan(type)
@@ -629,17 +625,7 @@ function gymLabel(gym, includeMembers = true) {
                 </div>`
         }
     } else {
-        if (gym.team_id !== 0) {
-            subtitle = `
-                      <div>
-                          <img class='gym info strength' src='static/images/gym/Strength.png'>
-                          <span class='gym'>
-                            Strength: ${gymPoints} (${slotsString})
-                          </span>
-                      </div>
-                      `
-            image = `<img class='gym sprite' src='static/images/gym/${teamName}_${getGymLevel(gym)}.png'>`
-        }
+        image = `<img class='gym sprite' src='static/images/gym/${teamName}_${getGymLevel(gym)}.png'>`
     }
 
 
@@ -687,7 +673,7 @@ function gymLabel(gym, includeMembers = true) {
         memberStr += '</div>'
     }
 
-    var result = `
+    return `
         <div>
             <center>
                 ${title}
@@ -698,10 +684,7 @@ function gymLabel(gym, includeMembers = true) {
             ${navInfo}
 
             ${memberStr}
-        </div>
-      `
-
-    return result
+        </div>`
 }
 
 function pokestopLabel(expireTime, latitude, longitude) {
@@ -1920,15 +1903,14 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
                 pokemonHtml += `
                     <tr onclick=toggleGymPokemonDetails(this)>
                         <td width="30px">
-                            <i class="pokemon-sprite n${pokemon.pokemon_id}"></i>
+                            <img class="pokemon sprite" src="static/icons/${pokemon.pokemon_id}.png">
                         </td>
                         <td>
-                            <div style="line-height:1em;">${pokemon.pokemon_name}</div>
-                            <div><img class='cp sidebar heart' src='static/images/gym/Heart.png'> <span class="cp sidebar value">${pokemon.pokemon_cp}</span></div>
+                            <div class="gym pokemon" style="line-height:1em;">${pokemon.pokemon_name}</div>
+                            <div><img class="gym pokemon motivation heart" src="static/images/gym/Heart.png"> <span class="gym pokemon">${pokemon.cp_decayed}</span></div>
                         </td>
                         <td width="190" align="center">
-                            <div class="trainer-level">${pokemon.trainer_level}</div>
-                            <div style="line-height: 1em;">${pokemon.trainer_name}</div>
+                            <div class="gym pokemon trainer">${pokemon.trainer_name} (${pokemon.trainer_level})</div>
                         </td>
                         <td width="10">
                             <!--<a href="#" onclick="toggleGymPokemonDetails(this)">-->
