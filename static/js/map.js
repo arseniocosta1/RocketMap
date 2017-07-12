@@ -1900,10 +1900,10 @@ function showGymDetails(id) { // eslint-disable-line no-unused-vars
     data.done(function (result) {
         var pokemonHtml = ''
         if (result.pokemon.length) {
-            if(!isOngoingRaid(result.raid)) {
+            if (!isOngoingRaid(result.raid)) {
                 result.pokemon.forEach((pokemon) => {
                     pokemonHtml += getSidebarGymMember(pokemon)
-            })
+                })
 
                 pokemonHtml = `<table><tbody>${pokemonHtml}</tbody></table>`
             }
@@ -2021,8 +2021,6 @@ function getSidebarGymMember(pokemon) {
                         </td>
                     </tr>
                     `
-
-
 }
 
 function toggleGymPokemonDetails(e) { // eslint-disable-line no-unused-vars
