@@ -2453,7 +2453,7 @@ def encounter_pokemon(args, pokemon, account, api, account_sets, status,
 
     except Exception as e:
         log.exception('There was an error encountering Pokemon ID %s with ' +
-                      'account %s', pokemon_id, hlvl_account['username'], e)
+                      'account %s: %s', pokemon_id, hlvl_account['username'], e)
 
     # We're done with the encounter. If it's from an
     # AccountSet, release account back to the pool.
