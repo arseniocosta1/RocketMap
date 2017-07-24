@@ -1,7 +1,12 @@
 module.exports = function(grunt) {
 
   // load plugins as needed instead of up front
-  require('jit-grunt')(grunt);
+  require('jit-grunt')(grunt, {
+      unzip: 'grunt-zip'
+  });
+
+  var path = require('path');
+  var fs = require('fs');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -123,7 +128,25 @@ module.exports = function(grunt) {
           'static/dist/css/status.min.css': 'static/dist/css/status.built.css'
         }
       }
-    }
+    },
+
+    unzip: {
+      'static01': {
+        router: function (filepath) {
+                  if (fs.existsSync('static/' + filepath)) {
+                      //console.log('not overwriting file: ' + filename);
+                      return null
+                  }
+
+                  console.log('unzipping to: ' + filepath)
+                  return filepath
+              },
+
+              src: 'static01.zip',
+              dest: 'static/'
+          }
+      }
+
   });
 
   grunt.registerTask('js-build', ['newer:babel', 'newer:uglify']);
