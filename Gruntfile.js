@@ -1,12 +1,12 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
   // load plugins as needed instead of up front
   require('jit-grunt')(grunt, {
-      unzip: 'grunt-zip'
-  });
+    unzip: 'grunt-zip'
+  })
 
-  var path = require('path');
-  var fs = require('fs');
+  var path = require('path')
+  var fs = require('fs')
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -28,9 +28,9 @@ module.exports = function(grunt) {
       options: {
         sourceMap: true,
         presets: [
-          ["env", {
-            "targets": {
-              "browsers": [">0.5%"]
+          ['env', {
+            'targets': {
+              'browsers': ['>0.5%']
             }
           }]
         ]
@@ -102,17 +102,17 @@ module.exports = function(grunt) {
       },
       js: {
         files: ['static/js/**/*.js'],
-        options: { livereload: true },
+        options: {livereload: true},
         tasks: ['js-lint', 'js-build']
       },
       json: {
         files: ['static/data/*.json', 'static/locales/*.json'],
-        options: { livereload: true },
+        options: {livereload: true},
         tasks: ['json']
       },
       css: {
         files: '**/*.scss',
-        options: { livereload: true },
+        options: {livereload: true},
         tasks: ['css-build']
       }
     },
@@ -129,32 +129,31 @@ module.exports = function(grunt) {
         }
       }
     },
-
     unzip: {
       'static01': {
         router: function (filepath) {
-                  if (fs.existsSync('static/' + filepath)) {
-                      //console.log('not overwriting file: ' + filename);
-                      return null
-                  }
-
-                  console.log('unzipping to: ' + filepath)
-                  return filepath
-              },
-
-              src: 'static01.zip',
-              dest: 'static/'
+          if (fs.existsSync('static/' + filepath)) {
+            //console.log('not overwriting file: ' + filename);
+            return null
           }
+
+          console.log('unzipping to: ' + filepath)
+          return filepath
+        },
+
+        src: 'static01.zip',
+        dest: 'static/'
       }
+    }
 
-  });
+  })
 
-  grunt.registerTask('js-build', ['newer:babel', 'newer:uglify']);
-  grunt.registerTask('css-build', ['newer:sass', 'newer:cssmin']);
-  grunt.registerTask('js-lint', ['newer:eslint']);
-  grunt.registerTask('json', ['newer:minjson']);
+  grunt.registerTask('js-build', ['newer:babel', 'newer:uglify'])
+  grunt.registerTask('css-build', ['newer:sass', 'newer:cssmin'])
+  grunt.registerTask('js-lint', ['newer:eslint'])
+  grunt.registerTask('json', ['newer:minjson'])
 
-  grunt.registerTask('build', ['clean', 'js-build', 'css-build', 'json']);
-  grunt.registerTask('lint', ['js-lint']);
-  grunt.registerTask('default', ['build', 'watch']);
-};
+  grunt.registerTask('build', ['clean', 'js-build', 'css-build', 'json'])
+  grunt.registerTask('lint', ['js-lint'])
+  grunt.registerTask('default', ['build', 'watch'])
+}
