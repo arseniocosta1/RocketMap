@@ -153,7 +153,7 @@ module.exports = function (grunt) {
     grunt.registerTask('js-lint', ['newer:eslint'])
     grunt.registerTask('json', ['newer:minjson'])
 
-    grunt.registerTask('build', ['clean', 'js-build', 'css-build', 'json'])
+    grunt.registerTask('build', ['clean', 'js-build', 'css-build', 'json', 'unzip'])
     grunt.registerTask('lint', ['js-lint'])
     grunt.registerTask('default', ['build', 'watch'])
 }
