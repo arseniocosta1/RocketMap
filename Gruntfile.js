@@ -133,11 +133,9 @@ module.exports = function (grunt) {
             'static01': {
                 router: function (filepath) {
                     if (fs.existsSync('static/' + filepath)) {
-                        //console.log('not overwriting file: ' + filename);
                         return null
                     }
 
-                    console.log('unzipping to: ' + filepath)
                     return filepath
                 },
 
